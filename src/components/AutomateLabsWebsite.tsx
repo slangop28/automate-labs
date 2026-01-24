@@ -1,8 +1,8 @@
 
 
-import React, { useState, useEffect, useRef } from 'react';
+
+import { useState, useEffect } from 'react';
 import { Link } from 'react-router-dom';
-import { supabase } from '../lib/supabaseClient';
 
 // --- Types ---
 
@@ -17,15 +17,6 @@ interface SectionHeadingProps {
     title: string;
     subtitle: string;
     center?: boolean;
-}
-
-interface Node {
-    id: number;
-    startX: number;
-    startY: number;
-    startRot: number;
-    gridX: number;
-    gridY: number;
 }
 
 interface Testimonial {
