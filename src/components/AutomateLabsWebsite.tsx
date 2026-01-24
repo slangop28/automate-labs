@@ -625,7 +625,7 @@ const Footer = () => {
     return (
         <footer id="contact" className="bg-white border-t border-gray-200 pt-20 pb-10">
             <div className="container mx-auto px-6">
-                <div className="grid gap-16 md:grid-cols-2 lg:grid-cols-3">
+                <div className="grid gap-16 md:grid-cols-2">
                     {/* Brand Info */}
                     <div className="space-y-6">
                         <div className="flex items-center gap-2">
@@ -648,25 +648,14 @@ const Footer = () => {
                     </div>
 
                     {/* Quick Links */}
-                    <div className="grid grid-cols-2 gap-8">
-                        <div>
-                            <h4 className="text-gray-900 font-bold mb-6">Company</h4>
-                            <ul className="space-y-4 text-gray-600">
-                                <li><Link to="/about" className="hover:text-blue-600 cursor-pointer transition-colors">About Us</Link></li>
-                                <li><Link to="/case-studies" className="hover:text-blue-600 cursor-pointer transition-colors">Case Studies</Link></li>
-                                <li><Link to="/careers" className="hover:text-blue-600 cursor-pointer transition-colors">Careers</Link></li>
-                                <li><Link to="/privacy" className="hover:text-blue-600 cursor-pointer transition-colors">Privacy Policy</Link></li>
-                            </ul>
-                        </div>
-                        <div>
-                            <h4 className="text-gray-900 font-bold mb-6">Services</h4>
-                            <ul className="space-y-4 text-gray-600">
-                                <li className="hover:text-blue-600 cursor-pointer transition-colors">AI Automation</li>
-                                <li className="hover:text-blue-600 cursor-pointer transition-colors">SaaS Development</li>
-                                <li className="hover:text-blue-600 cursor-pointer transition-colors">Web & Mobile</li>
-                                <li className="hover:text-blue-600 cursor-pointer transition-colors">Consulting</li>
-                            </ul>
-                        </div>
+                    <div>
+                        <h4 className="text-gray-900 font-bold mb-6">Company</h4>
+                        <ul className="space-y-4 text-gray-600">
+                            <li><Link to="/about" className="hover:text-blue-600 cursor-pointer transition-colors">About Us</Link></li>
+                            <li><Link to="/case-studies" className="hover:text-blue-600 cursor-pointer transition-colors">Case Studies</Link></li>
+                            <li><Link to="/careers" className="hover:text-blue-600 cursor-pointer transition-colors">Careers</Link></li>
+                            <li><Link to="/privacy" className="hover:text-blue-600 cursor-pointer transition-colors">Privacy Policy</Link></li>
+                        </ul>
                     </div>
 
                     {/* Contact Form */}

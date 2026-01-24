@@ -7,10 +7,12 @@ import CaseStudies from './pages/CaseStudies'
 import AboutUs from './pages/AboutUs'
 import PrivacyPolicy from './pages/PrivacyPolicy'
 import Careers from './pages/Careers'
+import ScrollToTop from './components/ScrollToTop'
 
 createRoot(document.getElementById('root')!).render(
   <StrictMode>
     <BrowserRouter>
+      <ScrollToTop />
       <Routes>
         <Route path="/" element={<AutomateLabsWebsite />} />
         <Route path="/case-studies" element={<CaseStudies />} />
