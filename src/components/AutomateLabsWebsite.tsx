@@ -1,7 +1,5 @@
 
-
-
-import { useState, useEffect } from 'react';
+import { useState, useEffect, useRef } from 'react';
 import { Link } from 'react-router-dom';
 
 // --- Types ---
@@ -10,6 +8,7 @@ interface ShimmerButtonProps {
     children: React.ReactNode;
     primary?: boolean;
     onClick?: () => void;
+    disabled?: boolean;
     className?: string;
 }
 
@@ -40,8 +39,6 @@ const submitToSupabase = async (table: string, data: any) => {
     const supabaseUrl = import.meta.env.VITE_SUPABASE_URL;
     const supabaseKey = import.meta.env.VITE_SUPABASE_ANON_KEY;
 
-    console.log(`Submitting to ${table} via REST API...`);
-
     try {
         const response = await fetch(`${supabaseUrl}/rest/v1/${table}`, {
             method: 'POST',
@@ -53,23 +50,14 @@ const submitToSupabase = async (table: string, data: any) => {
             },
             body: JSON.stringify(data)
         });
-
-        if (!response.ok) {
-            const errorText = await response.text();
-            console.error('Supabase REST Error:', response.status, errorText);
-            throw new Error(`Server responded with ${response.status}: ${errorText}`);
-        }
-
-        console.log('Supabase REST Submission Success');
-        return true;
+        return response.ok;
     } catch (error) {
-        console.error('Supabase REST Catch Block:', error);
-        alert(`Connection Failed: ${(error as Error).message}. Please disable AdBlockers.`);
+        console.error('Submission Error:', error);
         return false;
     }
 };
 
-// --- Icons (Inline SVGs for self-containment) ---
+// --- Icons ---
 const Icons = {
     Menu: () => (
         <svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round"><line x1="4" y1="12" x2="20" y2="12" /><line x1="4" y1="6" x2="20" y2="6" /><line x1="4" y1="18" x2="20" y2="18" /></svg>
@@ -103,159 +91,208 @@ const Icons = {
     )
 };
 
-// --- Helper Components ---
+// --- Components ---
 
-const ShimmerButton: React.FC<ShimmerButtonProps> = ({ children, primary = true, onClick, className = "" }) => (
+const ShimmerButton: React.FC<ShimmerButtonProps> = ({ children, primary = true, onClick, disabled, className = "" }) => (
     <button
         onClick={onClick}
+        disabled={disabled}
         className={`group relative overflow-hidden rounded-lg px-8 py-4 font-bold transition-all hover:scale-105 active:scale-95 shadow-lg ${primary
-            ? 'bg-gradient-to-r from-gray-900 to-gray-800 text-white hover:shadow-gray-900/30'
-            : 'bg-white text-gray-900 border border-gray-200 hover:border-gray-300 hover:bg-gray-50'
-            } ${className}`}
+            ? 'bg-gradient-to-r from-purple-900 to-violet-800 text-white hover:shadow-purple-900/40 hover:shadow-[0_0_20px_rgba(139,92,246,0.4)]'
+            : 'bg-white/5 text-white border border-white/10 hover:bg-white/10 backdrop-blur-sm hover:shadow-[0_0_15px_rgba(255,255,255,0.1)]'
+            } ${disabled ? 'opacity-50 cursor-not-allowed grayscale' : ''} ${className}`}
     >
-        <div className={`absolute inset-0 -translate-x-full group-hover:animate-[shimmer_1.5s_infinite] bg-gradient-to-r from-transparent ${primary ? 'via-white/20' : 'via-gray-400/10'} to-transparent`} />
-        <span className="flex items-center gap-2">{children}</span>
+        <div className={`absolute inset-0 -translate-x-full group-hover:animate-[shimmer_1.5s_infinite] bg-gradient-to-r from-transparent ${primary ? 'via-white/20' : 'via-purple-400/10'} to-transparent`} />
+        <span className="flex items-center gap-2 relative z-10">{children}</span>
     </button>
 );
 
 const SectionHeading: React.FC<SectionHeadingProps> = ({ title, subtitle, center = true }) => (
     <div className={`mb-16 ${center ? 'text-center' : 'text-left'}`}>
-        <h2 className="mb-4 text-4xl font-extrabold tracking-tight text-gray-900 md:text-5xl">
+        <h2 className="mb-4 text-4xl font-extrabold tracking-tight text-white md:text-5xl drop-shadow-[0_0_15px_rgba(139,92,246,0.2)]">
             {title}
         </h2>
-        <p className="mx-auto max-w-2xl text-lg text-gray-600 leading-relaxed">{subtitle}</p>
+        <p className="mx-auto max-w-2xl text-lg text-slate-400 leading-relaxed font-light">{subtitle}</p>
     </div>
 );
-
-// --- Animation Components ---
 
 const DoorAnimation = () => {
     const [open, setOpen] = useState(false);
     const [removed, setRemoved] = useState(false);
 
     useEffect(() => {
-        // Start animation almost immediately
         const timer = setTimeout(() => setOpen(true), 100);
-        // Remove from DOM/Layout after animation completes to free pointer events
         const removeTimer = setTimeout(() => setRemoved(true), 1600);
-        return () => {
-            clearTimeout(timer);
-            clearTimeout(removeTimer);
-        };
+        return () => { clearTimeout(timer); clearTimeout(removeTimer); };
     }, []);
 
     if (removed) return null;
 
     return (
-        <div className="fixed inset-0 z-[100] flex pointer-events-none">
-            {/* Left Panel */}
-            <div
-                className={`h-full w-1/2 bg-gray-900 transition-transform duration-[1500ms] cubic-bezier(0.7, 0, 0.3, 1) ${open ? '-translate-x-full' : 'translate-x-0'
-                    }`}
-            >
-                <div className={`absolute right-0 top-1/2 -translate-y-1/2 pr-8 transition-opacity duration-500 ${open ? 'opacity-0' : 'opacity-100'}`}>
-                    <div className="flex items-center gap-4">
-                        <div className="h-[2px] w-24 bg-white/20"></div>
-                        <span className="text-xl font-bold tracking-[0.5em] text-white/40 uppercase">Automate</span>
-                    </div>
-                </div>
-            </div>
-
-            {/* Right Panel */}
-            <div
-                className={`h-full w-1/2 bg-gray-900 transition-transform duration-[1500ms] cubic-bezier(0.7, 0, 0.3, 1) ${open ? 'translate-x-full' : 'translate-x-0'
-                    }`}
-            >
-                <div className={`absolute left-0 top-1/2 -translate-y-1/2 pl-8 transition-opacity duration-500 ${open ? 'opacity-0' : 'opacity-100'}`}>
-                    <div className="flex items-center gap-4">
-                        <span className="text-xl font-bold tracking-[0.5em] text-white/40 uppercase">Labs</span>
-                        <div className="h-[2px] w-24 bg-white/20"></div>
-                    </div>
+        <div className="fixed inset-0 z-[500] flex pointer-events-none overflow-hidden">
+            <div className={`w-1/2 h-full bg-[#0a0118] transition-transform duration-[1500ms] ease-expo ${open ? '-translate-x-full' : 'translate-x-0'} border-r border-purple-500/20 shadow-[10px_0_50px_rgba(139,92,246,0.2)]`} />
+            <div className={`w-1/2 h-full bg-[#0a0118] transition-transform duration-[1500ms] ease-expo ${open ? 'translate-x-full' : 'translate-x-0'} border-l border-purple-500/20 shadow-[-10px_0_50px_rgba(139,92,246,0.2)]`} />
+            <div className={`absolute inset-0 flex items-center justify-center transition-opacity duration-1000 ${open ? 'opacity-0' : 'opacity-100'}`}>
+                <div className="flex flex-col items-center gap-4">
+                    <div className="text-purple-500 animate-pulse"><Icons.Zap /></div>
+                    <span className="text-2xl font-black tracking-widest text-white uppercase opacity-50">AutomateLabs.in</span>
                 </div>
             </div>
         </div>
     );
 };
 
-// --- Sections ---
+const InteractionLayer = () => {
+    const canvasRef = useRef<HTMLCanvasElement>(null);
+    const particles = useRef<any[]>([]);
+    const mouse = useRef({ x: 0, y: 0, active: false });
+
+    useEffect(() => {
+        const canvas = canvasRef.current;
+        if (!canvas) return;
+        const ctx = canvas.getContext('2d');
+        if (!ctx) return;
+
+        const resize = () => {
+            canvas.width = window.innerWidth;
+            canvas.height = window.innerHeight;
+        };
+
+        const createParticle = (x: number, y: number, isSplash = false) => {
+            const count = isSplash ? 30 : 2;
+            for (let i = 0; i < count; i++) {
+                particles.current.push({
+                    x, y,
+                    vx: isSplash ? (Math.random() - 0.5) * 20 : (Math.random() - 0.5) * 3,
+                    vy: isSplash ? (Math.random() - 0.5) * 20 : (Math.random() - 0.5) * 3,
+                    life: 1.0,
+                    decay: isSplash ? 0.015 : 0.04,
+                    size: isSplash ? Math.random() * 6 + 3 : 12,
+                    color: `hsl(${Math.random() * 360}, 100%, 80%)`
+                });
+            }
+        };
+
+        const draw = () => {
+            ctx.clearRect(0, 0, canvas.width, canvas.height);
+            particles.current.forEach((p, i) => {
+                p.x += p.vx;
+                p.y += p.vy;
+                p.life -= p.decay;
+                if (p.life <= 0) {
+                    particles.current.splice(i, 1);
+                    return;
+                }
+                ctx.globalAlpha = p.life;
+                ctx.shadowBlur = 25;
+                ctx.shadowColor = p.color;
+                ctx.fillStyle = p.color;
+                ctx.beginPath();
+                ctx.arc(p.x, p.y, p.size * p.life, 0, Math.PI * 2);
+                ctx.fill();
+            });
+            if (mouse.current.active) {
+                createParticle(mouse.current.x, mouse.current.y);
+            }
+            requestAnimationFrame(draw);
+        };
+
+        const handleMove = (e: MouseEvent | TouchEvent) => {
+            const pos = 'touches' in e ? e.touches[0] : (e as MouseEvent);
+            mouse.current = { x: pos.clientX, y: pos.clientY, active: true };
+        };
+
+        const handleClick = (e: MouseEvent | TouchEvent) => {
+            const pos = 'touches' in e ? e.touches[0] : (e as MouseEvent);
+            createParticle(pos.clientX, pos.clientY, true);
+        };
+
+        window.addEventListener('resize', resize);
+        window.addEventListener('mousemove', handleMove);
+        window.addEventListener('mousedown', handleClick);
+        window.addEventListener('touchstart', handleMove);
+        resize();
+        draw();
+
+        return () => {
+            window.removeEventListener('resize', resize);
+            window.removeEventListener('mousemove', handleMove);
+            window.removeEventListener('mousedown', handleClick);
+            window.removeEventListener('touchstart', handleMove);
+        };
+    }, []);
+
+    return <canvas ref={canvasRef} className="fixed inset-0 z-[100] pointer-events-none opacity-80 mix-blend-screen" />;
+};
+
+const AuroraBackground = () => (
+    <div className="fixed inset-0 z-0 pointer-events-none overflow-hidden">
+        <div className="absolute top-[-10%] left-[-10%] w-[40%] h-[40%] rounded-full bg-purple-900/20 blur-[120px] animate-pulse"></div>
+        <div className="absolute bottom-[-10%] right-[-10%] w-[50%] h-[50%] rounded-full bg-indigo-900/10 blur-[150px]"></div>
+        <div className="absolute inset-0 bg-[url('https://grainy-gradients.vercel.app/noise.svg')] opacity-20 mix-blend-soft-light"></div>
+    </div>
+);
+
+const BorderBeam = ({ className = "" }: { className?: string }) => (
+    <div className={`absolute inset-0 rounded-[inherit] pointer-events-none ${className}`}>
+        <div className="absolute inset-0 rounded-[inherit] border border-white/5 shadow-[0_0_15px_rgba(139,92,246,0.1)]" />
+        <div className="absolute inset-x-0 top-0 h-px bg-gradient-to-r from-transparent via-purple-500/50 to-transparent animate-border-beam" />
+    </div>
+);
+
+const SectionDivider = () => (
+    <div className="relative h-px w-full overflow-hidden">
+        <div className="absolute inset-x-0 top-0 h-px bg-gradient-to-r from-transparent via-purple-500/30 to-transparent"></div>
+        <div className="absolute inset-x-0 top-0 h-px bg-gradient-to-r from-transparent via-purple-400 to-transparent opacity-50 blur-sm animate-pulse"></div>
+    </div>
+);
 
 const CallbackModal = ({ isOpen, onClose }: { isOpen: boolean; onClose: () => void }) => {
-    const [status, setStatus] = useState<'idle' | 'loading' | 'success' | 'error'>('idle');
-
+    const [status, setStatus] = useState<'idle' | 'loading' | 'success'>('idle');
     if (!isOpen) return null;
 
     const handleSubmit = async (e: React.FormEvent) => {
         e.preventDefault();
         setStatus('loading');
-
         const form = e.target as HTMLFormElement;
         const formData = new FormData(form);
-        const data = Object.fromEntries(formData.entries());
-
-        const success = await submitToSupabase('callbacks', {
-            name: data.name,
-            phone: data.phone,
-            email: data.email,
-            query: data.query
-        });
-
+        const success = await submitToSupabase('callbacks', Object.fromEntries(formData.entries()));
         if (success) {
             setStatus('success');
-            setTimeout(() => {
-                onClose();
-                setStatus('idle');
-            }, 2000);
+            setTimeout(() => { onClose(); setStatus('idle'); }, 2000);
         } else {
-            setStatus('error');
+            alert('Submission failed. Please try again.');
+            setStatus('idle');
         }
     };
 
     return (
-        <div className="fixed inset-0 z-[200] flex items-center justify-center p-4">
-            <div className="absolute inset-0 bg-black/60 backdrop-blur-sm" onClick={onClose}></div>
-            <div className="relative w-full max-w-md overflow-hidden rounded-2xl bg-white shadow-2xl animate-[fadeIn_0.3s_ease-out] p-6">
-
-                <button onClick={onClose} className="absolute right-4 top-4 rounded-full bg-gray-100 p-2 text-gray-500 hover:bg-gray-200">
-                    <Icons.X />
-                </button>
-
+        <div className="fixed inset-0 z-[200] flex items-center justify-center p-4 backdrop-blur-sm bg-black/60">
+            <div className="relative w-full max-w-md overflow-hidden rounded-2xl bg-[#0a0118] p-8 shadow-2xl border border-white/10 animate-[fadeIn_0.3s_ease-out]">
+                <BorderBeam />
+                <button onClick={onClose} className="absolute right-4 top-4 text-slate-500 hover:text-white"><Icons.X /></button>
                 {status === 'success' ? (
-                    <div className="flex flex-col items-center justify-center text-center py-8">
-                        <div className="mb-4 rounded-full bg-green-100 p-4 text-green-600"><Icons.CheckCircle /></div>
-                        <h3 className="mb-2 text-2xl font-bold text-gray-900">Request Sent!</h3>
-                        <p className="text-gray-600">We will call you back shortly.</p>
+                    <div className="text-center py-8">
+                        <div className="mx-auto mb-4 flex h-16 w-16 items-center justify-center rounded-full bg-purple-500/20 text-purple-400"><Icons.CheckCircle /></div>
+                        <h3 className="text-2xl font-bold text-white">We'll call you soon!</h3>
                     </div>
                 ) : (
-                    <form onSubmit={handleSubmit} className="space-y-4">
+                    <form onSubmit={handleSubmit} className="space-y-6">
                         <div>
-                            <h2 className="text-2xl font-bold text-gray-900">Request Callback</h2>
-                            <p className="text-sm text-gray-500">Leave your details and we'll contact you.</p>
+                            <h2 className="text-3xl font-black text-white mb-2">Request Callback</h2>
+                            <p className="text-slate-400 text-sm italic underline decoration-purple-500/30">Speak to an automation expert today.</p>
                         </div>
-
-                        <div className="space-y-2">
-                            <label className="text-sm font-semibold text-gray-700">Name</label>
-                            <input name="name" required className="w-full rounded-lg border border-gray-300 px-4 py-2 focus:border-gray-900 focus:ring-1 focus:ring-gray-900" placeholder="Your Name" />
+                        <div className="space-y-1">
+                            <label className="text-xs font-black uppercase tracking-tighter text-slate-500">Name</label>
+                            <input name="name" required className="w-full rounded-lg border border-white/10 bg-white/5 px-4 py-3 text-white focus:border-purple-500 focus:ring-1 focus:ring-purple-500 transition-all outline-none" placeholder="Enter your name" />
                         </div>
-                        <div className="space-y-2">
-                            <label className="text-sm font-semibold text-gray-700">Phone Number</label>
-                            <input name="phone" type="tel" required className="w-full rounded-lg border border-gray-300 px-4 py-2 focus:border-gray-900 focus:ring-1 focus:ring-gray-900" placeholder="+1 (555) 000-0000" />
+                        <div className="space-y-1">
+                            <label className="text-xs font-black uppercase tracking-tighter text-slate-500">Phone Number</label>
+                            <input name="phone" type="tel" required className="w-full rounded-lg border border-white/10 bg-white/5 px-4 py-3 text-white focus:border-purple-500 focus:ring-1 focus:ring-purple-500 transition-all outline-none" placeholder="+1 (555) 000-0000" />
                         </div>
-                        <div className="space-y-2">
-                            <label className="text-sm font-semibold text-gray-700">Email</label>
-                            <input name="email" type="email" required className="w-full rounded-lg border border-gray-300 px-4 py-2 focus:border-gray-900 focus:ring-1 focus:ring-gray-900" placeholder="you@example.com" />
-                        </div>
-                        <div className="space-y-2">
-                            <label className="text-sm font-semibold text-gray-700">Query</label>
-                            <textarea name="query" rows={2} className="w-full rounded-lg border border-gray-300 px-4 py-2 focus:border-gray-900 focus:ring-1 focus:ring-gray-900" placeholder="How can we help?"></textarea>
-                        </div>
-
-                        <button
-                            type="submit"
-                            disabled={status === 'loading'}
-                            className="w-full rounded-lg bg-gray-900 py-3 font-bold text-white transition-all hover:bg-gray-800 disabled:opacity-50"
-                        >
-                            {status === 'loading' ? 'Sending...' : 'Request Call'}
-                        </button>
+                        <ShimmerButton primary className="w-full !py-4" disabled={status === 'loading'}>
+                            {status === 'loading' ? 'Processing...' : 'Schedule Call'}
+                        </ShimmerButton>
                     </form>
                 )}
             </div>
@@ -274,49 +311,39 @@ const Navbar = ({ onRequestCallback }: { onRequestCallback: () => void }) => {
     }, []);
 
     return (
-        <nav className={`fixed top-0 z-50 w-full transition-all duration-300 ${scrolled ? 'bg-white/80 py-4 backdrop-blur-md border-b border-gray-100 shadow-sm' : 'bg-transparent py-6'}`}>
+        <nav className={`fixed top-0 z-50 w-full transition-all duration-300 ${scrolled ? 'bg-[#0a0118]/80 py-4 backdrop-blur-md shadow-lg' : 'bg-transparent py-6'}`}>
+            {scrolled && <div className="absolute bottom-0 left-0 h-px w-full bg-gradient-to-r from-transparent via-purple-500/50 to-transparent"></div>}
             <div className="container mx-auto flex items-center justify-between px-6">
-                <div className="flex items-center gap-2">
-                    <div className="flex h-8 w-8 items-center justify-center rounded-lg bg-gray-900 text-white">
+                <div className="flex items-center gap-2 group cursor-pointer" onClick={() => window.scrollTo({ top: 0, behavior: 'smooth' })}>
+                    <div className="flex h-8 w-8 items-center justify-center rounded-lg bg-white/10 text-white shadow-[0_0_15px_rgba(255,255,255,0.2)] transition-all group-hover:scale-110 group-hover:shadow-[0_0_20px_rgba(139,92,246,0.6)]">
                         <Icons.Zap />
                     </div>
-                    <span className="text-xl font-bold tracking-wider text-gray-900">AutomateLabs</span>
+                    <span className="text-xl font-black tracking-wider text-white hover:drop-shadow-[0_0_8px_rgba(255,255,255,0.8)] transition-all">AutomateLabs.in</span>
                 </div>
 
                 <div className="hidden md:flex items-center gap-8">
-                    {['Services', 'Methodology', 'Results', 'Contact'].map((item) => (
-                        <a key={item} href={`#${item.toLowerCase()}`} className="text-sm font-medium text-gray-600 transition-colors hover:text-blue-600">
+                    {['Services', 'Methodology', 'Results'].map((item) => (
+                        <a key={item} href={`#${item.toLowerCase()}`} className="text-sm font-black text-slate-400 transition-all hover:text-white hover:drop-shadow-[0_0_8px_rgba(168,85,247,0.8)]">
                             {item}
                         </a>
                     ))}
-                    <button
-                        onClick={onRequestCallback}
-                        className="rounded-md bg-gray-900 px-4 py-2 text-sm font-medium text-white transition-all hover:bg-gray-800 hover:shadow-lg"
-                    >
+                    <button onClick={onRequestCallback} className="rounded-md bg-white px-4 py-2 text-sm font-black text-black transition-all hover:bg-slate-200 hover:shadow-[0_0_20px_rgba(255,255,255,0.3)] active:scale-95">
                         Request Callback
                     </button>
                 </div>
 
-                <button className="block md:hidden text-gray-900" onClick={() => setIsOpen(!isOpen)}>
+                <button className="block md:hidden text-white" onClick={() => setIsOpen(!isOpen)}>
                     {isOpen ? <Icons.X /> : <Icons.Menu />}
                 </button>
             </div>
 
-            {/* Mobile Menu */}
             {isOpen && (
-                <div className="absolute top-full left-0 w-full bg-white border-b border-gray-100 p-6 md:hidden shadow-xl">
+                <div className="absolute top-full left-0 w-full bg-[#0a0118] border-b border-purple-500/20 p-6 md:hidden shadow-xl backdrop-blur-xl">
                     <div className="flex flex-col gap-4">
-                        {['Services', 'Methodology', 'Results', 'Contact'].map((item) => (
-                            <a key={item} href={`#${item.toLowerCase()}`} onClick={() => setIsOpen(false)} className="text-lg font-medium text-gray-900">
-                                {item}
-                            </a>
+                        {['Services', 'Methodology', 'Results'].map((item) => (
+                            <a key={item} href={`#${item.toLowerCase()}`} onClick={() => setIsOpen(false)} className="text-lg font-black text-white hover:text-purple-400">{item}</a>
                         ))}
-                        <button
-                            onClick={() => { onRequestCallback(); setIsOpen(false); }}
-                            className="w-full rounded-md bg-gray-900 px-4 py-2 text-lg font-medium text-white"
-                        >
-                            Request Callback
-                        </button>
+                        <button onClick={() => { onRequestCallback(); setIsOpen(false); }} className="w-full rounded-md bg-white px-4 py-2 text-lg font-black text-black">Request Callback</button>
                     </div>
                 </div>
             )}
@@ -324,46 +351,38 @@ const Navbar = ({ onRequestCallback }: { onRequestCallback: () => void }) => {
     );
 };
 
-const HeroSection = ({ onOpenAudit }: { onOpenAudit: () => void }) => {
-    return (
-        <section className="relative h-screen flex flex-col justify-center items-center overflow-hidden bg-white" id="hero">
-            {/* Soft Gradient Background */}
-            <div className="absolute inset-0 bg-gradient-to-b from-gray-50/80 via-white to-white pointer-events-none"></div>
-
-            {/* Content Container */}
-            <div className="relative z-10 flex flex-col items-center justify-center text-center px-4 animate-[fadeIn_1s_ease-out]">
-                <div className="mb-8 inline-flex items-center rounded-full border border-gray-200 bg-white px-4 py-1.5 shadow-sm">
-                    <span className="flex h-2 w-2 rounded-full bg-green-500 animate-pulse mr-2"></span>
-                    <span className="text-xs font-bold uppercase tracking-wider text-gray-600">Intelligent Automation Systems</span>
-                </div>
-
-                <h1 className="mb-6 max-w-5xl text-6xl font-extrabold tracking-tight text-gray-900 md:text-8xl leading-tight">
-                    Turn Chaos Into <br />
-                    <span className="text-transparent bg-clip-text bg-gradient-to-r from-gray-600 to-gray-900">Clarity.</span>
-                </h1>
-
-                <p className="mb-12 max-w-2xl text-xl text-gray-600 leading-relaxed font-light">
-                    We engineer sophisticated AI automations and custom SaaS solutions that streamline workflows, eliminate inefficiencies, and unlock new levels of productivity.
-                </p>
-
-                <div className="flex flex-col gap-4 sm:flex-row mt-4">
-                    <ShimmerButton onClick={onOpenAudit}>Book Free Audit <Icons.ArrowRight /></ShimmerButton>
-                    <Link to="/case-studies">
-                        <ShimmerButton primary={false}>See Case Studies</ShimmerButton>
-                    </Link>
-                </div>
+const HeroSection = ({ onOpenAudit }: { onOpenAudit: () => void }) => (
+    <section className="relative h-screen flex flex-col justify-center items-center overflow-hidden" id="hero">
+        <div className="absolute inset-0 bg-gradient-to-b from-[#0a0118]/50 via-transparent to-[#0a0118] pointer-events-none"></div>
+        <div className="relative z-10 flex flex-col items-center justify-center text-center px-4 animate-[fadeIn_1s_ease-out]">
+            <div className="mb-8 inline-flex items-center rounded-full border border-white/5 bg-white/5 px-4 py-1.5 shadow-2xl backdrop-blur-md">
+                <span className="flex h-2 w-2 rounded-full bg-purple-500 animate-pulse mr-2 shadow-[0_0_10px_#a855f7]"></span>
+                <span className="text-xs font-black uppercase tracking-wider text-slate-400">Intelligent Automation Systems</span>
             </div>
-
-            {/* Scroll Indicator */}
-            <div className="absolute bottom-10 left-1/2 -translate-x-1/2 animate-bounce">
-                <div className="flex flex-col items-center gap-2 text-gray-400">
-                    <span className="text-xs uppercase tracking-widest font-semibold">Scroll to Explore</span>
-                    <Icons.ChevronDown />
-                </div>
+            <h1 className="mb-6 max-w-5xl text-6xl font-black tracking-tight text-white md:text-8xl leading-tight">
+                Turn Chaos Into <br />
+                <span className="text-transparent bg-clip-text bg-gradient-to-r from-purple-400 via-violet-400 to-indigo-500 animate-gradient drop-shadow-[0_0_30px_rgba(168,85,247,0.4)]">Clarity.</span>
+            </h1>
+            <p className="mb-12 max-w-2xl text-xl text-slate-400 leading-relaxed font-light">
+                We engineer sophisticated AI automations and custom SaaS solutions that streamline workflows and eliminate inefficiencies.
+            </p>
+            <div className="flex flex-col gap-6 sm:flex-row mt-4">
+                <ShimmerButton onClick={onOpenAudit} className="!bg-purple-700 !text-white hover:!bg-purple-600 shadow-[0_0_30px_rgba(124,58,237,0.4)]">
+                    Book Free Audit <Icons.ArrowRight />
+                </ShimmerButton>
+                <Link to="/case-studies">
+                    <ShimmerButton primary={false} className="!bg-white/5 !text-white !border-white/10 hover:!bg-white/10 backdrop-blur-sm">See Case Studies</ShimmerButton>
+                </Link>
             </div>
-        </section>
-    );
-};
+        </div>
+        <div className="absolute bottom-10 left-1/2 -translate-x-1/2 animate-bounce">
+            <div className="flex flex-col items-center gap-2 text-slate-500">
+                <span className="text-xs uppercase tracking-widest font-black">Scroll to Explore</span>
+                <Icons.ChevronDown />
+            </div>
+        </div>
+    </section>
+);
 
 const MetricsSection = () => {
     const stats = [
@@ -374,15 +393,16 @@ const MetricsSection = () => {
     ];
 
     return (
-        <section className="relative bg-white py-24 border-b border-gray-100">
-            <div className="container mx-auto px-6">
+        <section className="relative backdrop-blur-sm bg-white/[0.02]">
+            <SectionDivider />
+            <div className="container mx-auto px-6 py-24">
                 <div className="grid grid-cols-2 gap-12 md:grid-cols-4">
                     {stats.map((stat, i) => (
                         <div key={i} className="group text-center">
-                            <div className="mb-2 text-5xl font-black text-gray-900 sm:text-6xl md:text-7xl tracking-tighter group-hover:-translate-y-1 transition-transform duration-300">
+                            <div className="mb-2 text-5xl font-black text-transparent bg-clip-text bg-gradient-to-r from-purple-400 via-violet-400 to-indigo-500 sm:text-6xl md:text-7xl tracking-tighter group-hover:-translate-y-2 transition-transform duration-300 drop-shadow-[0_0_15px_rgba(139,92,246,0.5)]">
                                 {stat.value}
                             </div>
-                            <div className="text-xs font-bold uppercase tracking-widest text-gray-500 group-hover:text-blue-600 transition-colors">
+                            <div className="text-sm font-black uppercase tracking-widest text-white transition-colors group-hover:text-purple-400">
                                 {stat.label}
                             </div>
                         </div>
@@ -398,44 +418,41 @@ const FeaturesSection = () => {
         {
             icon: Icons.Cpu,
             title: "Intelligent AI Automations",
-            desc: "Transform manual bottlenecks into self-driving workflows. We implement autonomous agents that work 24/7 to handle your repetitive tasks with zero error rate.",
+            desc: "Transform manual bottlenecks into self-driving workflows. We implement autonomous agents that work 24/7.",
             points: ["Workflow Analysis & Optimization", "Custom AI Agent Development", "Seamless API Integrations"]
         },
         {
             icon: Icons.ShieldCheck,
             title: "Custom SaaS Solutions",
-            desc: "Stop settling for off-the-shelf limitations. We architect secure, cloud-native software tailored perfectly to your unique business requirements and compliance needs.",
+            desc: "Stop settling for off-the-shelf limitations. We architect secure, cloud-native software tailored perfectly.",
             points: ["Enterprise-Grade Security", "Scalable Cloud Architecture", "Multi-Tenant Systems"]
         },
         {
             icon: Icons.Rocket,
             title: "High-Performance Web & Mobile",
-            desc: "Capture your audience instantly. We build lightning-fast, SEO-optimized digital experiences that convert visitors into loyal customers across all devices.",
+            desc: "Capture your audience instantly. We build lightning-fast, SEO-optimized digital experiences.",
             points: ["Sub-second Load Times", "Conversion Rate Optimization", "Progressive Web Apps (PWA)"]
         }
     ];
 
     return (
-        <section id="services" className="bg-gray-50 py-32">
-            <div className="container mx-auto px-6">
-                <SectionHeading
-                    title="Engineered for Impact"
-                    subtitle="We don't just write code. We build strategic assets that solve real business problems and drive measurable growth."
-                />
-
+        <section id="services" className="relative bg-[#0a0118]">
+            <SectionDivider />
+            <div className="container mx-auto px-6 py-32">
+                <SectionHeading title="Engineered for Impact" subtitle="We build strategic assets that solve real business problems." />
                 <div className="grid gap-8 md:grid-cols-3">
                     {services.map((service, i) => (
-                        <div key={i} className="group relative rounded-xl bg-white p-8 transition-all duration-300 hover:-translate-y-2 shadow-[0_2px_10px_rgb(0,0,0,0.05)] hover:shadow-[0_20px_40px_rgb(0,0,0,0.08)] border border-gray-100">
-                            <div className="mb-6 inline-flex h-14 w-14 items-center justify-center rounded-lg bg-gray-100 text-gray-900 group-hover:bg-gray-900 group-hover:text-white transition-colors duration-300">
+                        <div key={i} className="group relative rounded-2xl bg-white/5 p-8 transition-all duration-300 hover:-translate-y-2 border border-white/10 backdrop-blur-sm overflow-hidden text-center">
+                            <BorderBeam className="opacity-0 group-hover:opacity-100" />
+                            <div className="mb-6 mx-auto inline-flex h-14 w-14 items-center justify-center rounded-xl bg-white/5 text-slate-300 group-hover:bg-purple-600 group-hover:text-white group-hover:shadow-[0_0_20px_rgba(168,85,247,0.4)] transition-all">
                                 <service.icon />
                             </div>
-                            <h3 className="mb-4 text-2xl font-bold text-gray-900 leading-tight">{service.title}</h3>
-                            <p className="mb-8 text-gray-600 leading-relaxed font-light">{service.desc}</p>
-                            <ul className="space-y-3">
+                            <h3 className="mb-4 text-2xl font-black text-white">{service.title}</h3>
+                            <p className="mb-8 text-slate-400 font-light text-sm">{service.desc}</p>
+                            <ul className="space-y-3 text-left">
                                 {service.points.map((point, idx) => (
-                                    <li key={idx} className="flex items-start gap-3 text-sm text-gray-600 font-medium">
-                                        <span className="mt-0.5 text-green-500"><Icons.CheckCircle /></span>
-                                        {point}
+                                    <li key={idx} className="flex items-center gap-3 text-xs text-slate-400 font-bold">
+                                        <span className="text-purple-400"><Icons.CheckCircle /></span> {point}
                                     </li>
                                 ))}
                             </ul>
@@ -450,72 +467,37 @@ const FeaturesSection = () => {
 const TestimonialsSection = () => {
     const [active, setActive] = useState(0);
     const testimonials: Testimonial[] = [
-        {
-            quote: "AutomateLabs didn't just build us a tool; they completely revolutionized how we handle logistics. What used to take 4 people a whole week is now done automatically in 30 minutes.",
-            author: "Sarah Jenkins",
-            role: "COO",
-            company: "LogiTech Global",
-            metric: "500+ Hours Saved / Month"
-        },
-        {
-            quote: "The custom SaaS platform they engineered allowed us to scale from 100 to 10,000 users without a single hiccup. Their attention to security and architecture is world-class.",
-            author: "David Chen",
-            role: "CTO",
-            company: "FinStream",
-            metric: "100x User Scaling"
-        },
-        {
-            quote: "Our conversion rate doubled within a month of launching the new site. The speed and animation quality is unlike anything else in our industry. Truly premium work.",
-            author: "Elena Rodriguez",
-            role: "Marketing Director",
-            company: "LuxRealEstate",
-            metric: "200% Conversion Increase"
-        }
+        { quote: "AutomateLabs revolutionized how we handle logistics. What took 4 people a week is now done automatically in 30 mins.", author: "Sarah Jenkins", role: "COO", company: "LogiTech Global", metric: "500+ Hours Saved / Month" },
+        { quote: "The custom SaaS platform allowed us to scale from 100 to 10,000 users without a hiccup. World-class architecture.", author: "David Chen", role: "CTO", company: "FinStream", metric: "100x User Scaling" },
+        { quote: "Our conversion rate doubled within a month. Truly premium work.", author: "Elena Rodriguez", role: "Marketing Director", company: "LuxRealEstate", metric: "200% Conversion Increase" }
     ];
 
     useEffect(() => {
-        const interval = setInterval(() => {
-            setActive((prev) => (prev + 1) % testimonials.length);
-        }, 5000);
+        const interval = setInterval(() => setActive((p) => (p + 1) % testimonials.length), 5000);
         return () => clearInterval(interval);
     }, [testimonials.length]);
 
     return (
-        <section id="results" className="relative bg-white py-32 overflow-hidden border-t border-gray-100">
-            <div className="container mx-auto relative px-6 z-10">
+        <section id="results" className="relative overflow-hidden bg-[#0a0118]/80 backdrop-blur-sm">
+            <SectionDivider />
+            <div className="container mx-auto relative px-6 py-32 z-10">
                 <div className="flex flex-col items-center">
-                    <div className="mb-8 rounded-full border border-gray-200 bg-gray-50 px-4 py-1 text-xs font-bold uppercase tracking-widest text-gray-500">
-                        Success Stories
-                    </div>
-
-                    <div className="h-[400px] w-full max-w-4xl relative">
+                    <div className="mb-8 rounded-full border border-white/5 bg-white/5 px-4 py-1 text-xs font-black uppercase tracking-widest text-slate-400">Success Stories</div>
+                    <div className="h-[300px] w-full max-w-4xl relative">
                         {testimonials.map((item, i) => (
-                            <div
-                                key={i}
-                                className={`absolute inset-0 flex flex-col items-center text-center transition-all duration-700 ease-out ${i === active ? "opacity-100 translate-x-0 blur-0" : "opacity-0 translate-x-10 blur-sm pointer-events-none"
-                                    }`}
-                            >
-                                <p className="mb-10 text-3xl font-serif italic leading-relaxed text-gray-900 md:text-5xl">
-                                    "{item.quote}"
-                                </p>
-                                <div className="flex flex-col items-center gap-2">
-                                    <h4 className="text-xl font-bold text-gray-900">{item.author}</h4>
-                                    <p className="text-gray-500 font-medium">{item.role} @ {item.company}</p>
-                                    <div className="mt-4 rounded-full bg-blue-50 px-6 py-2 text-sm font-bold text-blue-900">
-                                        {item.metric}
-                                    </div>
+                            <div key={i} className={`absolute inset-0 flex flex-col items-center text-center transition-all duration-700 ease-out ${i === active ? "opacity-100 translate-x-0" : "opacity-0 translate-x-10 pointer-events-none"}`}>
+                                <p className="mb-8 text-3xl font-serif italic text-white md:text-5xl drop-shadow-[0_0_20px_rgba(255,255,255,0.1)]">"{item.quote}"</p>
+                                <div className="flex flex-col items-center gap-1">
+                                    <h4 className="text-xl font-black text-white">{item.author}</h4>
+                                    <p className="text-slate-500 font-bold text-sm">{item.role} @ {item.company}</p>
+                                    <div className="mt-4 rounded-full bg-purple-900/40 border border-purple-500/20 px-6 py-2 text-sm font-black text-purple-100 shadow-[0_0_15px_rgba(139,92,246,0.3)]">{item.metric}</div>
                                 </div>
                             </div>
                         ))}
                     </div>
-
                     <div className="flex gap-2 mt-8">
                         {testimonials.map((_, i) => (
-                            <button
-                                key={i}
-                                onClick={() => setActive(i)}
-                                className={`h-2 rounded-full transition-all duration-300 ${i === active ? 'w-12 bg-gray-900' : 'w-2 bg-gray-300 hover:bg-gray-400'}`}
-                            />
+                            <button key={i} onClick={() => setActive(i)} className={`h-2 rounded-full transition-all duration-500 ${i === active ? 'w-12 bg-purple-500 shadow-[0_0_10px_rgba(168,85,247,0.5)]' : 'w-2 bg-white/10'}`} />
                         ))}
                     </div>
                 </div>
@@ -524,335 +506,202 @@ const TestimonialsSection = () => {
     );
 };
 
-const ProcessSection = () => {
-    const steps = [
-        { id: "01", name: "Discover", title: "Deep Dive Audit", desc: "We analyze your current workflows and identify the highest-impact opportunities for automation." },
-        { id: "02", name: "Design", title: "Strategic Roadmap", desc: "We architect a custom solution blueprint, selecting the best stack for scalability and security." },
-        { id: "03", name: "Deploy", title: "Agile Build", desc: "Our rapid development cycles ensure you get functional tools fast, with rigorous testing phases." },
-        { id: "04", name: "Optimize", title: "Continuous Growth", desc: "We track performance metrics post-launch and iterate to ensure your ROI keeps climbing." },
-    ];
-
-    return (
-        <section id="methodology" className="bg-gray-900 py-32 px-6 text-white">
-            <div className="container mx-auto">
-                <div className="mb-16 text-center">
-                    <h2 className="mb-4 text-4xl font-extrabold tracking-tight text-white md:text-5xl">From Concept to Core</h2>
-                    <p className="mx-auto max-w-2xl text-lg text-gray-400">Our proven four-step methodology ensures predictable success and rapid value delivery.</p>
-                </div>
-
-                <div className="grid gap-6 md:grid-cols-4">
-                    {steps.map((step, i) => (
-                        <div key={i} className="group relative p-6 border-l border-white/10 hover:border-white transition-colors duration-300">
-                            <span className="text-6xl font-black text-white absolute -top-4 -left-2 opacity-10 group-hover:opacity-20 transition-opacity z-0 select-none">
-                                {step.id}
-                            </span>
-                            <div className="relative z-10">
-                                <h4 className="text-blue-400 font-bold uppercase tracking-wider text-sm mb-2">{step.name}</h4>
-                                <h3 className="text-xl font-bold text-white mb-3">{step.title}</h3>
-                                <p className="text-gray-400 text-sm leading-relaxed">{step.desc}</p>
-                            </div>
-                        </div>
-                    ))}
-                </div>
-            </div>
-        </section>
-    )
-}
-
-const FinalCTA = ({ onOpenAudit }: { onOpenAudit: () => void }) => (
-    <section className="relative py-32 overflow-hidden items-center flex flex-col justify-center text-center px-6 bg-white">
-        <div className="absolute inset-0 bg-[url('data:image/svg+xml;base64,PHN2ZyB3aWR0aD0iMjAiIGhlaWdodD0iMjAiIHhtbG5zPSJodHRwOi8vd3d3LnczLm9yZy8yMDAwL3N2ZyI+PGNpcmNsZSBjeD0iMSIgY3k9IjEiIHI9IjEiIGZpbGw9InJnYmEoMCwwLDAsMC4wNSkiLz48L3N2Zz4=')] opacity-50"></div>
-
-        <div className="relative z-10 max-w-4xl mx-auto">
-            <h2 className="text-5xl md:text-7xl font-bold text-gray-900 mb-8 tracking-tighter">
-                Stop wasting time on <br />
-                <span className="text-transparent bg-clip-text bg-gradient-to-r from-blue-600 to-blue-800">manual tasks.</span>
-            </h2>
-            <p className="text-xl text-gray-600 mb-10 max-w-2xl mx-auto">
-                Join the forward-thinking companies saving thousands of hours every month.
-                Your custom automation roadmap is just one call away.
-            </p>
-            <div className="flex flex-col items-center gap-6">
-                <ShimmerButton onClick={onOpenAudit} className="scale-125 shadow-xl">Book Your Free Automation Audit</ShimmerButton>
-                <div className="flex items-center gap-2 text-sm text-gray-500 font-medium">
-                    <Icons.ShieldCheck />
-                    <span>No commitment • 30-min strategy session</span>
-                </div>
+const ProcessSection = () => (
+    <section id="methodology" className="relative bg-[#0a0118]">
+        <SectionDivider />
+        <div className="container mx-auto px-6 py-32">
+            <SectionHeading title="The Methodology" subtitle="How we deliver excellence, step by step." />
+            <div className="grid gap-12 md:grid-cols-4">
+                {[
+                    { step: "01", title: "Audit", desc: "Deep dive into your workflows." },
+                    { step: "02", title: "Strategy", desc: "Crafting the perfect roadmap." },
+                    { step: "03", title: "Build", desc: "Agile engineering and deployment." },
+                    { step: "04", title: "Scale", desc: "Continuous optimization and growth." }
+                ].map((item, i) => (
+                    <div key={i} className="group relative">
+                        <div className="text-6xl font-black text-white/5 transition-colors group-hover:text-purple-500/20">{item.step}</div>
+                        <h4 className="text-xl font-black text-white mt-[-20px]">{item.title}</h4>
+                        <p className="text-slate-500 font-bold text-sm mt-2">{item.desc}</p>
+                    </div>
+                ))}
             </div>
         </div>
     </section>
-)
+);
+
+const FinalCTA = ({ onOpenAudit }: { onOpenAudit: () => void }) => (
+    <section className="relative overflow-hidden items-center flex flex-col justify-center text-center px-6 bg-[#0a0118]">
+        <SectionDivider />
+        <div className="relative z-10 max-w-4xl mx-auto py-32">
+            <h2 className="text-4xl md:text-7xl font-black text-white mb-8 tracking-tighter">
+                Stop wasting time on <br />
+                <span className="text-transparent bg-clip-text bg-gradient-to-r from-purple-400 via-indigo-400 to-violet-500 drop-shadow-[0_0_20px_rgba(168,85,247,0.3)]">manual tasks.</span>
+            </h2>
+            <ShimmerButton onClick={onOpenAudit} className="scale-125 !bg-white !text-black shadow-[0_0_40px_rgba(255,255,255,0.3)] hover:scale-150 transition-all duration-500">Book Your Free Audit</ShimmerButton>
+            <div className="flex items-center justify-center gap-2 text-sm text-slate-500 font-black pt-10">
+                <span className="text-purple-400"><Icons.ShieldCheck /></span> No commitment • 30-min strategy session
+            </div>
+        </div>
+    </section>
+);
 
 const Footer = () => {
-    const [status, setStatus] = useState<'idle' | 'loading' | 'success' | 'error'>('idle');
+    const [status, setStatus] = useState<'idle' | 'loading' | 'success'>('idle');
 
-    const handleSubmit = async (e: React.FormEvent<HTMLFormElement>) => {
+    const handleSubscribe = async (e: React.FormEvent) => {
         e.preventDefault();
         setStatus('loading');
-
-        const target = e.target as typeof e.target & {
-            0: { value: string };
-            1: { value: string };
-            2: { value: string };
-            reset: () => void;
-        };
-
-        const success = await submitToSupabase('callbacks', {
-            name: target[0].value,
-            email: target[1].value,
-            query: target[2].value
-        });
-
+        const form = e.target as HTMLFormElement;
+        const formData = new FormData(form);
+        const success = await submitToSupabase('newsletter', Object.fromEntries(formData.entries()));
         if (success) {
             setStatus('success');
-            target.reset();
+            form.reset();
+            setTimeout(() => setStatus('idle'), 3000);
         } else {
-            setStatus('error');
+            alert('Subscription failed. Please try again.');
+            setStatus('idle');
         }
-
-        setTimeout(() => setStatus('idle'), 3000);
     };
 
     return (
-        <footer id="contact" className="bg-white border-t border-gray-200 pt-20 pb-10">
-            <div className="container mx-auto px-6">
-                <div className="grid gap-16 md:grid-cols-2">
-                    {/* Brand Info */}
-                    <div className="space-y-6">
-                        <div className="flex items-center gap-2">
-                            <div className="flex h-8 w-8 items-center justify-center rounded-lg bg-gray-900 text-white">
+        <footer className="bg-[#0a0118] relative z-10">
+            <SectionDivider />
+            <div className="container mx-auto px-6 py-20">
+                <div className="grid gap-12 lg:grid-cols-4 md:grid-cols-2">
+                    <div className="space-y-6 lg:col-span-1">
+                        <div className="flex items-center gap-2 group cursor-pointer">
+                            <div className="flex h-8 w-8 items-center justify-center rounded-lg bg-white/10 text-white shadow-[0_0_15px_rgba(255,255,255,0.2)] group-hover:shadow-[0_0_20px_rgba(139,92,246,0.6)] transition-all">
                                 <Icons.Zap />
                             </div>
-                            <span className="text-xl font-bold tracking-wider text-gray-900">AutomateLabs</span>
+                            <span className="text-xl font-black tracking-wider text-white">AutomateLabs.in</span>
                         </div>
-                        <p className="text-gray-500 leading-relaxed">
-                            We build the future of business operations through intelligent software and seamless automation.
-                        </p>
-                        <div className="flex gap-4 pt-4">
-                            {/* Social Placeholders */}
-                            {[1, 2, 3].map(i => (
-                                <div key={i} className="h-10 w-10 rounded-full bg-gray-100 hover:bg-gray-200 transition-colors cursor-pointer flex items-center justify-center text-gray-600">
-                                    <Icons.Globe />
-                                </div>
-                            ))}
-                        </div>
+                        <p className="text-slate-400 font-bold text-sm leading-relaxed">Empowering businesses through intelligent software and autonomous AI systems.</p>
                     </div>
 
-                    {/* Quick Links */}
-                    <div>
-                        <h4 className="text-gray-900 font-bold mb-6">Company</h4>
-                        <ul className="space-y-4 text-gray-600">
-                            <li><Link to="/about" className="hover:text-blue-600 cursor-pointer transition-colors">About Us</Link></li>
-                            <li><Link to="/case-studies" className="hover:text-blue-600 cursor-pointer transition-colors">Case Studies</Link></li>
-                            <li><Link to="/careers" className="hover:text-blue-600 cursor-pointer transition-colors">Careers</Link></li>
-                            <li><Link to="/privacy" className="hover:text-blue-600 cursor-pointer transition-colors">Privacy Policy</Link></li>
+                    <div className="lg:col-span-1">
+                        <h4 className="text-white font-black mb-6 uppercase tracking-widest text-xs">Company</h4>
+                        <ul className="space-y-4">
+                            <li><Link to="/about" className="text-sm font-black text-slate-500 transition-all hover:text-white hover:drop-shadow-[0_0_8px_rgba(168,85,247,0.8)]">About Us</Link></li>
+                            <li><Link to="/case-studies" className="text-sm font-black text-slate-500 transition-all hover:text-white hover:drop-shadow-[0_0_8px_rgba(168,85,247,0.8)]">Case Studies</Link></li>
+                            <li><Link to="/careers" className="text-sm font-black text-slate-500 transition-all hover:text-white hover:drop-shadow-[0_0_8px_rgba(168,85,247,0.8)]">Careers</Link></li>
+                            <li><Link to="/privacy" className="text-sm font-black text-slate-500 transition-all hover:text-white hover:drop-shadow-[0_0_8px_rgba(168,85,247,0.8)]">Privacy Policy</Link></li>
                         </ul>
                     </div>
 
-                    {/* Contact Form */}
-                    <div>
-                        <h4 className="text-gray-900 font-bold mb-6">Start Your Project</h4>
-                        <form onSubmit={handleSubmit} className="space-y-4">
-                            <div>
-                                <input
-                                    type="text"
-                                    placeholder="Name"
-                                    required
-                                    className="w-full rounded-lg border border-gray-200 bg-gray-50 px-4 py-3 text-gray-900 placeholder-gray-400 focus:border-gray-900 focus:outline-none focus:ring-1 focus:ring-gray-900 transition-all"
-                                />
-                            </div>
-                            <div>
-                                <input
-                                    type="email"
-                                    placeholder="Email Address"
-                                    required
-                                    className="w-full rounded-lg border border-gray-200 bg-gray-50 px-4 py-3 text-gray-900 placeholder-gray-400 focus:border-gray-900 focus:outline-none focus:ring-1 focus:ring-gray-900 transition-all"
-                                />
-                            </div>
-                            <div>
-                                <textarea
-                                    placeholder="Tell us about your project..."
-                                    required
-                                    rows={3}
-                                    className="w-full rounded-lg border border-gray-200 bg-gray-50 px-4 py-3 text-gray-900 placeholder-gray-400 focus:border-gray-900 focus:outline-none focus:ring-1 focus:ring-gray-900 transition-all"
-                                ></textarea>
-                            </div>
-                            <button
-                                type="submit"
-                                disabled={status === 'loading' || status === 'success'}
-                                className={`w-full rounded-lg py-3 font-bold transition-all ${status === 'success'
-                                    ? 'bg-green-500 text-white'
-                                    : 'bg-gray-900 text-white hover:bg-gray-800'
-                                    }`}
-                            >
-                                {status === 'idle' && "Send Message"}
-                                {status === 'loading' && <span className="animate-pulse">Sending...</span>}
-                                {status === 'success' && "Message Sent!"}
-                            </button>
-                        </form>
+                    <div className="lg:col-span-2 relative overflow-hidden rounded-2xl border border-white/10 bg-white/5 p-8 backdrop-blur-sm">
+                        <BorderBeam />
+                        <div className="relative z-10">
+                            <h4 className="text-white font-black mb-2 text-xl">Subscribe to our Newsletter</h4>
+                            <p className="text-slate-500 text-sm mb-6 font-bold">Get the latest automation insights delivered to your inbox.</p>
+
+                            {status === 'success' ? (
+                                <div className="py-4 text-center bg-purple-500/10 border border-purple-500/20 rounded-lg animate-pulse">
+                                    <span className="text-purple-400 font-black">Welcome to the future! You're subscribed.</span>
+                                </div>
+                            ) : (
+                                <form onSubmit={handleSubscribe} className="space-y-4">
+                                    <div className="grid grid-cols-1 sm:grid-cols-2 gap-4">
+                                        <input name="name" required className="w-full rounded-lg border border-white/10 bg-white/5 px-4 py-3 text-white placeholder-slate-600 focus:border-purple-500 transition-all outline-none text-sm" placeholder="Full Name" />
+                                        <input name="phone" type="tel" required className="w-full rounded-lg border border-white/10 bg-white/5 px-4 py-3 text-white placeholder-slate-600 focus:border-purple-500 transition-all outline-none text-sm" placeholder="Phone Number" />
+                                    </div>
+                                    <div className="flex flex-col sm:flex-row gap-4">
+                                        <input name="email" type="email" required className="flex-1 rounded-lg border border-white/10 bg-white/5 px-4 py-3 text-white placeholder-slate-600 focus:border-purple-500 transition-all outline-none text-sm" placeholder="Email Address" />
+                                        <ShimmerButton primary className="!py-3 !px-6 text-sm" disabled={status === 'loading'}>
+                                            {status === 'loading' ? 'Subscribing...' : 'Subscribe'}
+                                        </ShimmerButton>
+                                    </div>
+                                </form>
+                            )}
+                        </div>
                     </div>
                 </div>
-
-                <div className="mt-20 border-t border-gray-100 pt-8 text-center text-sm text-gray-500">
-                    © {new Date().getFullYear()} AutomateLabs.in. All rights reserved.
+                <div className="mt-20 border-t border-white/5 pt-8 flex flex-col md:flex-row justify-between items-center gap-4">
+                    <div className="text-xs font-black text-slate-600 lowercase tracking-widest leading-relaxed opacity-50">
+                        © {new Date().getFullYear()} AutomateLabs.in • built with intelligent systems
+                    </div>
+                    <div className="flex gap-6">
+                        <div className="h-2 w-2 rounded-full bg-purple-500/20"></div>
+                        <div className="h-2 w-2 rounded-full bg-purple-500/40"></div>
+                        <div className="h-2 w-2 rounded-full bg-purple-500/60"></div>
+                    </div>
                 </div>
             </div>
         </footer>
     );
-}
-
-// --- Audit Form Component ---
+};
 
 const AuditModal = ({ isOpen, onClose }: { isOpen: boolean; onClose: () => void }) => {
-    const [status, setStatus] = useState<'idle' | 'loading' | 'success' | 'error'>('idle');
-
+    const [status, setStatus] = useState<'idle' | 'loading' | 'success'>('idle');
     if (!isOpen) return null;
 
     const handleSubmit = async (e: React.FormEvent) => {
         e.preventDefault();
         setStatus('loading');
-
         const form = e.target as HTMLFormElement;
-        const formData = new FormData(form);
-        const data = Object.fromEntries(formData.entries());
-
-        const success = await submitToSupabase('audits', {
-            full_name: data.fullName,
-            email: data.email,
-            phone: data.phone,
-            company_name: data.companyName,
-            objective: data.objective,
-            bottlenecks: data.bottlenecks
-        });
-
+        const success = await submitToSupabase('audits', Object.fromEntries(new FormData(form)));
         if (success) {
             setStatus('success');
-            setTimeout(() => {
-                onClose();
-                setStatus('idle');
-            }, 2000);
+            setTimeout(() => { onClose(); setStatus('idle'); }, 2000);
         } else {
-            setStatus('error');
+            alert('Submission failed.');
+            setStatus('idle');
         }
     };
 
     return (
-        <div className="fixed inset-0 z-[200] flex items-center justify-center p-4">
-            <div className="absolute inset-0 bg-black/60 backdrop-blur-sm" onClick={onClose}></div>
-            <div className="relative w-full max-w-4xl overflow-hidden rounded-2xl bg-white shadow-2xl animate-[fadeIn_0.3s_ease-out] flex flex-col md:flex-row max-h-[90vh]">
-
-                {/* Close Button */}
-                <button onClick={onClose} className="absolute right-4 top-4 z-10 rounded-full bg-gray-100 p-2 text-gray-500 hover:bg-gray-200">
-                    <Icons.X />
-                </button>
-
-                {/* Sidebar (Context) */}
-                <div className="hidden w-1/3 bg-gray-900 p-8 text-white md:flex flex-col justify-between">
+        <div className="fixed inset-0 z-[200] flex items-center justify-center p-4 bg-black/60 backdrop-blur-sm">
+            <div className="relative w-full max-w-4xl overflow-hidden rounded-2xl bg-[#0a0118] shadow-2xl flex flex-col md:flex-row max-h-[90vh] border border-white/10">
+                <BorderBeam />
+                <button onClick={onClose} className="absolute right-4 top-4 z-10 text-slate-500 hover:text-white transition-colors"><Icons.X /></button>
+                <div className="hidden w-1/3 bg-gradient-to-b from-purple-900 to-[#0a0118] p-8 text-white md:flex flex-col justify-between border-r border-white/5">
                     <div>
                         <div className="mb-6 flex items-center gap-2">
-                            <div className="flex h-8 w-8 items-center justify-center rounded-lg bg-blue-600 text-white"><Icons.Zap /></div>
-                            <span className="font-bold tracking-wider">AutomateLabs</span>
+                            <div className="flex h-8 w-8 items-center justify-center rounded-lg bg-white/10"><Icons.Zap /></div>
+                            <span className="font-black tracking-wider uppercase text-sm opacity-80">AutomateLabs.in</span>
                         </div>
-                        <h3 className="mb-4 text-2xl font-bold">Your Roadmap to Efficiency starts here.</h3>
-                        <p className="text-gray-400">Tell us about your current operations, and we'll build a custom automation strategy for you.</p>
-                    </div>
-                    <div className="space-y-4">
-                        <div className="flex items-center gap-3 text-sm text-gray-400">
-                            <Icons.CheckCircle /> <span>Free 30-min Consultation</span>
-                        </div>
-                        <div className="flex items-center gap-3 text-sm text-gray-400">
-                            <Icons.CheckCircle /> <span>Custom ROI Analysis</span>
-                        </div>
-                        <div className="flex items-center gap-3 text-sm text-gray-400">
-                            <Icons.CheckCircle /> <span>No Commitment Required</span>
-                        </div>
+                        <h3 className="text-3xl font-black leading-tight mb-4">Your Roadmap Starts Here</h3>
+                        <p className="text-slate-400 text-sm font-bold">Get a custom automation strategy for your business.</p>
                     </div>
                 </div>
-
-                {/* Form Content */}
-                <div className="flex-1 overflow-y-auto p-8">
+                <div className="flex-1 overflow-y-auto p-8 lg:p-12">
                     {status === 'success' ? (
-                        <div className="flex h-full flex-col items-center justify-center text-center">
-                            <div className="mb-4 rounded-full bg-green-100 p-4 text-green-600"><Icons.CheckCircle /></div>
-                            <h3 className="mb-2 text-2xl font-bold text-gray-900">Request Received!</h3>
-                            <p className="text-gray-600">We'll be in touch shortly to schedule your audit.</p>
+                        <div className="text-center py-12">
+                            <div className="mb-4 inline-flex h-16 w-16 items-center justify-center rounded-full bg-purple-500/20 text-purple-400 shadow-[0_0_20px_rgba(168,85,247,0.3)]"><Icons.CheckCircle /></div>
+                            <h3 className="text-2xl font-black text-white">Audit Requested!</h3>
                         </div>
                     ) : (
                         <form onSubmit={handleSubmit} className="space-y-6">
-                            <div>
-                                <h2 className="text-2xl font-bold text-gray-900">Configure Your Audit</h2>
-                                <p className="text-gray-500 text-sm">Please provide as much detail as possible.</p>
-                            </div>
-
+                            <h2 className="text-3xl font-black text-white">Configure Your Audit</h2>
                             <div className="grid gap-6 md:grid-cols-2">
-                                <div className="space-y-2">
-                                    <label className="text-sm font-semibold text-gray-700">Full Name</label>
-                                    <input name="fullName" required className="w-full rounded-lg border border-gray-300 px-4 py-2 focus:border-gray-900 focus:ring-1 focus:ring-gray-900" placeholder="John Doe" />
+                                <div className="space-y-1">
+                                    <label className="text-xs font-black uppercase text-slate-500">Company Name</label>
+                                    <input name="companyName" required className="w-full rounded-lg border border-white/10 bg-white/5 px-4 py-2 text-white focus:border-purple-500 outline-none transition-all placeholder:text-slate-700" placeholder="e.g. Acme Corp" />
                                 </div>
-                                <div className="space-y-2">
-                                    <label className="text-sm font-semibold text-gray-700">Work Email</label>
-                                    <input name="email" type="email" required className="w-full rounded-lg border border-gray-300 px-4 py-2 focus:border-gray-900 focus:ring-1 focus:ring-gray-900" placeholder="john@company.com" />
-                                </div>
-                                <div className="space-y-2">
-                                    <label className="text-sm font-semibold text-gray-700">Phone</label>
-                                    <input name="phone" type="tel" className="w-full rounded-lg border border-gray-300 px-4 py-2 focus:border-gray-900 focus:ring-1 focus:ring-gray-900" placeholder="+1 (555) 000-0000" />
-                                </div>
-                                <div className="space-y-2">
-                                    <label className="text-sm font-semibold text-gray-700">Company Name</label>
-                                    <input name="companyName" required className="w-full rounded-lg border border-gray-300 px-4 py-2 focus:border-gray-900 focus:ring-1 focus:ring-gray-900" placeholder="Acme Inc." />
+                                <div className="space-y-1">
+                                    <label className="text-xs font-black uppercase text-slate-500">Phone (+91)</label>
+                                    <input name="phone" type="tel" required className="w-full rounded-lg border border-white/10 bg-white/5 px-4 py-2 text-white focus:border-purple-500 outline-none transition-all placeholder:text-slate-700" placeholder="+91 00000 00000" />
                                 </div>
                             </div>
-
-                            <div className="space-y-2">
-                                <label className="text-sm font-semibold text-gray-700">Primary Objective</label>
-                                <select name="objective" className="w-full rounded-lg border border-gray-300 px-4 py-2 focus:border-gray-900 focus:ring-1 focus:ring-gray-900">
-                                    <option>Reduce Operational Costs</option>
-                                    <option>Save Employee Time</option>
-                                    <option>Scale Operations</option>
-                                    <option>Improve Data Accuracy</option>
-                                </select>
+                            <div className="grid gap-6 md:grid-cols-2">
+                                <div className="space-y-1">
+                                    <label className="text-xs font-black uppercase text-slate-500">Email Address</label>
+                                    <input name="email" type="email" required className="w-full rounded-lg border border-white/10 bg-white/5 px-4 py-2 text-white focus:border-purple-500 outline-none transition-all placeholder:text-slate-700" placeholder="john@company.com" />
+                                </div>
+                                <div className="space-y-1">
+                                    <label className="text-xs font-black uppercase text-slate-500">Business Niche</label>
+                                    <input name="niche" required className="w-full rounded-lg border border-white/10 bg-white/5 px-4 py-2 text-white focus:border-purple-500 outline-none transition-all placeholder:text-slate-700" placeholder="e.g. Real Estate" />
+                                </div>
                             </div>
-
-                            <div className="space-y-2">
-                                <label className="text-sm font-semibold text-gray-700">Key Bottlenecks</label>
-                                <textarea name="bottlenecks" rows={3} className="w-full rounded-lg border border-gray-300 px-4 py-2 focus:border-gray-900 focus:ring-1 focus:ring-gray-900" placeholder="Describe the manual processes you want to automate..."></textarea>
+                            <div className="space-y-1">
+                                <label className="text-xs font-black uppercase text-slate-500">Key Bottleneck (Optional)</label>
+                                <textarea name="bottlenecks" rows={2} className="w-full rounded-lg border border-white/10 bg-white/5 px-4 py-2 text-white focus:border-purple-500 outline-none transition-all placeholder:text-slate-700" placeholder="What should we automate?" />
                             </div>
-
-                            <div className="flex justify-end pt-4">
-                                <button type="button" onClick={onClose} className="mr-4 px-6 py-2 text-sm font-semibold text-gray-600 hover:text-gray-900">Cancel</button>
-                                <button
-                                    type="submit"
-                                    disabled={status === 'loading'}
-                                    className="rounded-lg bg-gray-900 px-8 py-3 font-bold text-white transition-all hover:bg-gray-800 disabled:opacity-50"
-                                >
-                                    {status === 'loading' ? 'Submitting...' : 'Book Audit'}
-                                </button>
-                            </div>
+                            <ShimmerButton primary className="w-full !py-4" disabled={status === 'loading'}>Book Audit</ShimmerButton>
                         </form>
                     )}
                 </div>
             </div>
-        </div>
-    );
-};
-
-// --- Main Application Component ---
-
-// --- Debug Component ---
-const DebugBanner = () => {
-    const url = import.meta.env.VITE_SUPABASE_URL;
-    const key = import.meta.env.VITE_SUPABASE_ANON_KEY;
-
-    if (!url || !key) return (
-        <div className="fixed top-0 left-0 w-full bg-red-600 text-white p-2 z-[9999] text-center font-bold text-xs">
-            ⚠️ CONFIG ERROR: Supabase Keys Missing! Restart 'npm run dev' or check .env file.
-        </div>
-    );
-
-    return (
-        <div className="fixed bottom-0 left-0 bg-gray-900 text-white p-2 z-[9999] text-xs font-mono opacity-75 pointer-events-none">
-            ✅ Connected to: {url?.substring(8, 20)}... <br />
-            🔑 Key Loaded: {key?.length > 10 ? 'Yes' : 'No'}
         </div>
     );
 };
@@ -862,13 +711,14 @@ export default function AutomateLabsWebsite() {
     const [isCallbackOpen, setIsCallbackOpen] = useState(false);
 
     return (
-        <div className="min-h-screen w-full bg-white font-sans text-gray-900 selection:bg-gray-200 selection:text-black">
-            <DebugBanner />
+        <div className="min-h-screen w-full font-sans text-slate-300 selection:bg-purple-900/30 selection:text-white relative bg-[#0a0118]">
             <AuditModal isOpen={isAuditOpen} onClose={() => setIsAuditOpen(false)} />
             <CallbackModal isOpen={isCallbackOpen} onClose={() => setIsCallbackOpen(false)} />
+            <InteractionLayer />
+            <AuroraBackground />
             <DoorAnimation />
             <Navbar onRequestCallback={() => setIsCallbackOpen(true)} />
-            <main>
+            <main className="relative z-10">
                 <HeroSection onOpenAudit={() => setIsAuditOpen(true)} />
                 <MetricsSection />
                 <FeaturesSection />

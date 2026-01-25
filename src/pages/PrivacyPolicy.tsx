@@ -1,138 +1,125 @@
+
 import { Link } from 'react-router-dom';
+
+const Icons = {
+    Zap: () => (
+        <svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round"><polygon points="13 2 3 14 12 14 11 22 21 10 12 10 13 2" /></svg>
+    ),
+    ArrowLeft: () => (
+        <svg xmlns="http://www.w3.org/2000/svg" width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round"><path d="m12 19-7-7 7-7" /><path d="M19 12H5" /></svg>
+    )
+};
 
 const PrivacyPolicy = () => {
     return (
-        <div className="min-h-screen bg-white">
-            {/* Navbar Spacer */}
-            <div className="h-20"></div>
+        <div className="min-h-screen bg-[#0a0118] text-slate-300 selection:bg-purple-900/30">
+            {/* Background elements */}
+            <div className="fixed inset-0 pointer-events-none overflow-hidden">
+                <div className="absolute top-[-10%] left-[-10%] w-[40%] h-[40%] rounded-full bg-purple-900/5 blur-[120px]"></div>
+                <div className="absolute bottom-[-10%] right-[-10%] w-[50%] h-[50%] rounded-full bg-indigo-900/5 blur-[150px]"></div>
+            </div>
 
             {/* Header */}
-            <section className="bg-gray-50 py-12 px-6 border-b border-gray-200">
-                <div className="container mx-auto max-w-4xl">
-                    <Link to="/" className="inline-flex items-center text-gray-600 hover:text-gray-900 mb-6 transition-colors">
-                        <svg className="w-5 h-5 mr-2" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-                            <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M15 19l-7-7 7-7" />
-                        </svg>
+            <section className="relative pt-32 pb-20 px-6 border-b border-white/5">
+                <div className="container mx-auto max-w-4xl relative z-10">
+                    <Link to="/" className="inline-flex items-center gap-2 text-slate-400 hover:text-white mb-10 transition-all font-black uppercase tracking-tighter text-sm group">
+                        <span className="group-hover:-translate-x-1 transition-transform"><Icons.ArrowLeft /></span>
                         Back to Home
                     </Link>
-                    <h1 className="text-4xl md:text-5xl font-extrabold text-gray-900 mb-4">Privacy Policy</h1>
-                    <p className="text-gray-600">Last updated: January 24, 2026</p>
+                    <h1 className="text-4xl md:text-5xl font-black text-white mb-4 tracking-tighter">Privacy Policy</h1>
+                    <p className="text-slate-500 font-bold uppercase tracking-widest text-xs">Last updated: January 26, 2026</p>
                 </div>
             </section>
 
             {/* Content */}
-            <section className="py-16 px-6">
-                <div className="container mx-auto max-w-4xl prose prose-lg">
-                    <div className="space-y-8 text-gray-700">
+            <section className="py-24 px-6 relative z-10">
+                <div className="container mx-auto max-w-4xl">
+                    <div className="space-y-12">
 
-                        <div>
-                            <h2 className="text-2xl font-bold text-gray-900 mb-4">1. Introduction</h2>
-                            <p>
+                        <div className="bg-white/5 border border-white/10 rounded-2xl p-8 backdrop-blur-sm">
+                            <h2 className="text-2xl font-black text-white mb-6 tracking-tight">1. Introduction</h2>
+                            <p className="text-slate-400 leading-relaxed font-bold">
                                 AutomateLabs ("we," "our," or "us") is committed to protecting your privacy. This Privacy Policy explains how we collect, use, disclose, and safeguard your information when you visit our website or use our services.
                             </p>
                         </div>
 
                         <div>
-                            <h2 className="text-2xl font-bold text-gray-900 mb-4">2. Information We Collect</h2>
-                            <h3 className="text-xl font-semibold text-gray-900 mb-3">2.1 Personal Information</h3>
-                            <p>We may collect personal information that you voluntarily provide to us when you:</p>
-                            <ul className="list-disc pl-6 space-y-2 my-4">
-                                <li>Request a callback or consultation</li>
-                                <li>Book a free audit</li>
-                                <li>Contact us via forms on our website</li>
-                                <li>Subscribe to our newsletter</li>
+                            <h2 className="text-2xl font-black text-white mb-6 tracking-tight">2. Information We Collect</h2>
+                            <p className="mb-4">We collect information voluntarily provided to us when you interact with our platform:</p>
+                            <ul className="grid grid-cols-1 md:grid-cols-2 gap-4 my-8">
+                                {[
+                                    "Request callback/consultation",
+                                    "Book a free audit",
+                                    "Newsletter subscription",
+                                    "Form interactions"
+                                ].map((item, i) => (
+                                    <li key={i} className="bg-white/5 border border-white/5 p-4 rounded-xl flex items-center gap-3">
+                                        <span className="h-1.5 w-1.5 rounded-full bg-purple-500"></span>
+                                        <span className="text-sm font-bold text-slate-300">{item}</span>
+                                    </li>
+                                ))}
                             </ul>
-                            <p className="mb-4">This information may include:</p>
-                            <ul className="list-disc pl-6 space-y-2">
-                                <li>Name</li>
-                                <li>Email address</li>
-                                <li>Phone number</li>
-                                <li>Company name</li>
-                                <li>Business requirements and queries</li>
-                            </ul>
+                            <div className="bg-purple-900/10 border border-purple-500/20 p-6 rounded-2xl">
+                                <p className="text-sm font-black text-purple-200 uppercase tracking-widest mb-4">Collected Data Types:</p>
+                                <p className="text-slate-400 text-sm leading-relaxed">Name, Email address, Phone number, Company details, and specific business automation requirements.</p>
+                            </div>
                         </div>
 
                         <div>
-                            <h2 className="text-2xl font-bold text-gray-900 mb-4">3. How We Use Your Information</h2>
-                            <p>We use the information we collect to:</p>
-                            <ul className="list-disc pl-6 space-y-2 my-4">
-                                <li>Respond to your inquiries and provide requested services</li>
-                                <li>Schedule consultations and audits</li>
-                                <li>Send you information about our services</li>
-                                <li>Improve our website and services</li>
-                                <li>Analyze usage patterns and trends</li>
-                                <li>Comply with legal obligations</li>
-                            </ul>
+                            <h2 className="text-2xl font-black text-white mb-6 tracking-tight">3. How We Use Data</h2>
+                            <p className="mb-6">We utilize your information to engineer better solutions:</p>
+                            <div className="space-y-4">
+                                {[
+                                    "Respond to service inquiries",
+                                    "Schedule strategic consultations",
+                                    "Deliver automation insights via newsletter",
+                                    "Compliance with legal standards"
+                                ].map((item, i) => (
+                                    <div key={i} className="flex items-start gap-4 p-4 rounded-xl hover:bg-white/5 transition-colors border border-transparent hover:border-white/5">
+                                        <div className="text-purple-500 font-black">0{i + 1}</div>
+                                        <div className="text-slate-300 font-bold">{item}</div>
+                                    </div>
+                                ))}
+                            </div>
+                        </div>
+
+                        <div className="grid md:grid-cols-2 gap-8">
+                            <div className="bg-white/5 border border-white/10 p-8 rounded-2xl">
+                                <h2 className="text-xl font-black text-white mb-4">4. Security</h2>
+                                <p className="text-sm text-slate-400 leading-relaxed font-bold">
+                                    We implement premium technical measures including AES-256 encryption to protect your strategic business data.
+                                </p>
+                            </div>
+                            <div className="bg-white/5 border border-white/10 p-8 rounded-2xl">
+                                <h2 className="text-xl font-black text-white mb-4">5. Data Sharing</h2>
+                                <p className="text-sm text-slate-400 leading-relaxed font-bold">
+                                    We do not sell data. We only share information with critical service providers under strict NDAs or when legally required.
+                                </p>
+                            </div>
                         </div>
 
                         <div>
-                            <h2 className="text-2xl font-bold text-gray-900 mb-4">4. Data Storage and Security</h2>
-                            <p>
-                                We implement appropriate technical and organizational security measures to protect your personal information against unauthorized access, alteration, disclosure, or destruction. Your data is stored securely using industry-standard encryption and security protocols.
-                            </p>
-                        </div>
-
-                        <div>
-                            <h2 className="text-2xl font-bold text-gray-900 mb-4">5. Data Sharing and Disclosure</h2>
-                            <p>We do not sell, trade, or rent your personal information to third parties. We may share your information only in the following circumstances:</p>
-                            <ul className="list-disc pl-6 space-y-2 my-4">
-                                <li>With your explicit consent</li>
-                                <li>To comply with legal obligations or court orders</li>
-                                <li>With service providers who assist in our operations (under strict confidentiality agreements)</li>
-                                <li>In connection with a merger, acquisition, or sale of assets</li>
-                            </ul>
-                        </div>
-
-                        <div>
-                            <h2 className="text-2xl font-bold text-gray-900 mb-4">6. Your Rights</h2>
-                            <p>You have the right to:</p>
-                            <ul className="list-disc pl-6 space-y-2 my-4">
-                                <li>Access the personal information we hold about you</li>
-                                <li>Request correction of inaccurate data</li>
-                                <li>Request deletion of your personal information</li>
-                                <li>Opt-out of marketing communications</li>
-                                <li>Withdraw consent at any time</li>
-                            </ul>
-                        </div>
-
-                        <div>
-                            <h2 className="text-2xl font-bold text-gray-900 mb-4">7. Cookies and Tracking</h2>
-                            <p>
-                                We may use cookies and similar tracking technologies to enhance your experience on our website. You can control cookie settings through your browser preferences.
-                            </p>
-                        </div>
-
-                        <div>
-                            <h2 className="text-2xl font-bold text-gray-900 mb-4">8. Data Retention</h2>
-                            <p>
-                                We retain your personal information only for as long as necessary to fulfill the purposes outlined in this Privacy Policy, unless a longer retention period is required by law.
-                            </p>
-                        </div>
-
-                        <div>
-                            <h2 className="text-2xl font-bold text-gray-900 mb-4">9. Children's Privacy</h2>
-                            <p>
-                                Our services are not directed to individuals under the age of 18. We do not knowingly collect personal information from children.
-                            </p>
-                        </div>
-
-                        <div>
-                            <h2 className="text-2xl font-bold text-gray-900 mb-4">10. Changes to This Policy</h2>
-                            <p>
-                                We may update this Privacy Policy from time to time. We will notify you of any changes by posting the new Privacy Policy on this page and updating the "Last updated" date.
-                            </p>
-                        </div>
-
-                        <div>
-                            <h2 className="text-2xl font-bold text-gray-900 mb-4">11. Contact Us</h2>
-                            <p>
-                                If you have any questions about this Privacy Policy or our data practices, please contact us through our website's contact form or reach out to our support team.
+                            <h2 className="text-2xl font-black text-white mb-6 tracking-tight">6. Contact</h2>
+                            <p className="text-slate-400 font-bold">
+                                For data inquiries, reach out to our systems administrator via the main contact channels.
                             </p>
                         </div>
 
                     </div>
                 </div>
             </section>
+
+            <footer className="py-20 border-t border-white/5 bg-[#0a0118]/50 overflow-hidden relative">
+                <div className="container mx-auto px-6 text-center relative z-10">
+                    <div className="flex items-center justify-center gap-2 mb-8">
+                        <div className="flex h-8 w-8 items-center justify-center rounded-lg bg-white/10 text-white"><Icons.Zap /></div>
+                        <span className="text-xl font-black tracking-wider text-white">AutomateLabs</span>
+                    </div>
+                    <div className="text-xs font-black text-slate-600 lowercase tracking-widest leading-relaxed opacity-50">
+                        © {new Date().getFullYear()} AutomateLabs.in • built with intelligent systems
+                    </div>
+                </div>
+            </footer>
         </div>
     );
 };

@@ -3,13 +3,17 @@
 @tailwind utilities;
 
 :root {
-  color-scheme: dark;
+  --bg-base: #0a0118;
+  --c-purple: #4c1d95;
+  --c-violet: #8b5cf6;
+  --c-indigo: #6366f1;
+  --c-slate: #cbd5e1;
 }
 
 body {
-  background-color: white;
-  color: #111827;
-  /* gray-900 */
+  background-color: var(--bg-base);
+  color: #f8fafc;
+  overflow-x: hidden;
 }
 
 @keyframes shimmer {
@@ -20,6 +24,42 @@ body {
   100% {
     transform: translateX(100%);
   }
+}
+
+@keyframes border-beam {
+  100% {
+    offset-distance: 100%;
+  }
+}
+
+@keyframes gradient {
+  0% {
+    background-position: 0% 50%;
+  }
+
+  50% {
+    background-position: 100% 50%;
+  }
+
+  100% {
+    background-position: 0% 50%;
+  }
+}
+
+.animate-gradient {
+  background-size: 200% auto;
+  animation: gradient 5s linear infinite;
+}
+
+@layer utilities {
+  .ease-expo {
+    transition-timing-function: cubic-bezier(0.19, 1, 0.22, 1);
+  }
+}
+
+.animate-border-beam {
+  animation: border-beam 4s linear infinite;
+  offset-path: border-box;
 }
 
 .perspective-1000 {

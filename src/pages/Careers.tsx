@@ -1,108 +1,119 @@
+
 import { Link } from 'react-router-dom';
+
+const Icons = {
+    Zap: () => (
+        <svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round"><polygon points="13 2 3 14 12 14 11 22 21 10 12 10 13 2" /></svg>
+    ),
+    ArrowLeft: () => (
+        <svg xmlns="http://www.w3.org/2000/svg" width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round"><path d="m12 19-7-7 7-7" /><path d="M19 12H5" /></svg>
+    ),
+    Tech: () => (
+        <svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round"><path d="M13 10V3L4 14h7v7l9-11h-7z" /></svg>
+    ),
+    Collaborate: () => (
+        <svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round"><path d="M17 21v-2a4 4 0 0 0-4-4H5a4 4 0 0 0-4 4v2" /><circle cx="9" cy="7" r="4" /><path d="M23 21v-2a4 4 0 0 0-3-3.87" /><path d="M16 3.13a4 4 0 0 1 0 7.75" /></svg>
+    ),
+    Impact: () => (
+        <svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round"><path d="M22 11.08V12a10 10 0 1 1-5.93-9.14" /><polyline points="22 4 12 14.01 9 11.01" /></svg>
+    )
+};
+
+const BorderBeam = ({ className = "" }: { className?: string }) => (
+    <div className={`absolute inset-0 pointer-events-none ${className}`}>
+        <div className="absolute inset-0 rounded-[inherit] border border-white/5 shadow-[0_0_15px_rgba(139,92,246,0.1)]" />
+        <div className="absolute inset-x-0 top-0 h-px bg-gradient-to-r from-transparent via-purple-500/50 to-transparent animate-border-beam" />
+    </div>
+);
 
 const Careers = () => {
     return (
-        <div className="min-h-screen bg-white">
-            {/* Navbar Spacer */}
-            <div className="h-20"></div>
+        <div className="min-h-screen bg-[#0a0118] text-slate-300 selection:bg-purple-900/30">
+            {/* Background elements */}
+            <div className="fixed inset-0 pointer-events-none overflow-hidden">
+                <div className="absolute top-[-10%] left-[-10%] w-[40%] h-[40%] rounded-full bg-purple-900/10 blur-[120px]"></div>
+                <div className="absolute bottom-[-10%] right-[-10%] w-[50%] h-[50%] rounded-full bg-indigo-900/5 blur-[150px]"></div>
+            </div>
 
             {/* Hero Section */}
-            <section className="bg-gradient-to-b from-gray-50 to-white py-20 px-6">
-                <div className="container mx-auto max-w-6xl">
-                    <Link to="/" className="inline-flex items-center text-gray-600 hover:text-gray-900 mb-6 transition-colors">
-                        <svg className="w-5 h-5 mr-2" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-                            <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M15 19l-7-7 7-7" />
-                        </svg>
+            <section className="relative pt-32 pb-20 px-6 border-b border-white/5">
+                <div className="container mx-auto max-w-6xl relative z-10">
+                    <Link to="/" className="inline-flex items-center gap-2 text-slate-400 hover:text-white mb-10 transition-all font-black uppercase tracking-tighter text-sm group">
+                        <span className="group-hover:-translate-x-1 transition-transform"><Icons.ArrowLeft /></span>
                         Back to Home
                     </Link>
-                    <h1 className="text-5xl md:text-6xl font-extrabold text-gray-900 mb-6">
-                        Join Our Team
+                    <div className="mb-6 inline-flex items-center rounded-full border border-white/5 bg-white/5 px-4 py-1.5 backdrop-blur-md">
+                        <span className="flex h-2 w-2 rounded-full bg-purple-500 animate-pulse mr-2"></span>
+                        <span className="text-xs font-black uppercase tracking-wider text-slate-400">Careers</span>
+                    </div>
+                    <h1 className="text-5xl md:text-7xl font-black text-white mb-8 tracking-tighter">
+                        Join Our <span className="text-transparent bg-clip-text bg-gradient-to-r from-purple-400 via-violet-400 to-indigo-500">Team</span>
                     </h1>
-                    <p className="text-xl text-gray-600 max-w-3xl leading-relaxed">
-                        Help us build the future of intelligent automation. We're looking for passionate engineers, designers, and automation specialists.
+                    <p className="text-xl text-slate-400 max-w-3xl font-light leading-relaxed">
+                        Help us build the next generation of autonomous intelligence. We're looking for high-performers ready to redefine modern work.
                     </p>
                 </div>
             </section>
 
             {/* Why Join Us */}
-            <section className="py-20 px-6">
+            <section className="py-32 px-6 relative z-10">
                 <div className="container mx-auto max-w-6xl">
-                    <h2 className="text-4xl font-bold text-gray-900 mb-12 text-center">Why AutomateLabs?</h2>
+                    <h2 className="text-4xl font-black text-white mb-16 text-center tracking-tight">Why AutomateLabs?</h2>
                     <div className="grid md:grid-cols-3 gap-8">
-                        <div className="bg-gray-50 rounded-xl p-8">
-                            <div className="w-12 h-12 bg-blue-100 rounded-lg flex items-center justify-center mb-4">
-                                <svg className="w-6 h-6 text-blue-600" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-                                    <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M13 10V3L4 14h7v7l9-11h-7z" />
-                                </svg>
+                        {[
+                            { icon: Icons.Tech, title: "Cutting-Edge Tech", desc: "Work with the latest AI frameworks and automation engines to build systems that scale.", color: "purple" },
+                            { icon: Icons.Collaborate, title: "Elite Collaboration", desc: "Join a concentrated team of engineers and designers who build world-class assets.", color: "violet" },
+                            { icon: Icons.Impact, title: "Real Impact", desc: "Watch your code save thousands of manual hours and transform business bottom lines.", color: "indigo" }
+                        ].map((item, i) => (
+                            <div key={i} className="group relative bg-white/5 border border-white/10 rounded-2xl p-10 hover:-translate-y-2 transition-all duration-500">
+                                <BorderBeam className="opacity-0 group-hover:opacity-100" />
+                                <div className={`mb-8 flex h-16 w-16 items-center justify-center rounded-2xl bg-${item.color}-500/20 text-${item.color}-400 group-hover:bg-${item.color}-500 group-hover:text-white transition-all shadow-xl`}>
+                                    <item.icon />
+                                </div>
+                                <h3 className="text-xl font-black text-white mb-4">{item.title}</h3>
+                                <p className="text-slate-400 font-bold leading-relaxed text-sm">{item.desc}</p>
                             </div>
-                            <h3 className="text-xl font-bold text-gray-900 mb-3">Cutting-Edge Technology</h3>
-                            <p className="text-gray-600">
-                                Work with the latest AI and automation technologies, building systems that make a real difference.
-                            </p>
-                        </div>
-                        <div className="bg-gray-50 rounded-xl p-8">
-                            <div className="w-12 h-12 bg-green-100 rounded-lg flex items-center justify-center mb-4">
-                                <svg className="w-6 h-6 text-green-600" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-                                    <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M12 4.354a4 4 0 110 5.292M15 21H3v-1a6 6 0 0112 0v1zm0 0h6v-1a6 6 0 00-9-5.197M13 7a4 4 0 11-8 0 4 4 0 018 0z" />
-                                </svg>
-                            </div>
-                            <h3 className="text-xl font-bold text-gray-900 mb-3">Collaborative Culture</h3>
-                            <p className="text-gray-600">
-                                Join a team of talented individuals who share knowledge and support each other's growth.
-                            </p>
-                        </div>
-                        <div className="bg-gray-50 rounded-xl p-8">
-                            <div className="w-12 h-12 bg-purple-100 rounded-lg flex items-center justify-center mb-4">
-                                <svg className="w-6 h-6 text-purple-600" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-                                    <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M9 12l2 2 4-4M7.835 4.697a3.42 3.42 0 001.946-.806 3.42 3.42 0 014.438 0 3.42 3.42 0 001.946.806 3.42 3.42 0 013.138 3.138 3.42 3.42 0 00.806 1.946 3.42 3.42 0 010 4.438 3.42 3.42 0 00-.806 1.946 3.42 3.42 0 01-3.138 3.138 3.42 3.42 0 00-1.946.806 3.42 3.42 0 01-4.438 0 3.42 3.42 0 00-1.946-.806 3.42 3.42 0 01-3.138-3.138 3.42 3.42 0 00-.806-1.946 3.42 3.42 0 010-4.438 3.42 3.42 0 00.806-1.946 3.42 3.42 0 013.138-3.138z" />
-                                </svg>
-                            </div>
-                            <h3 className="text-xl font-bold text-gray-900 mb-3">Impactful Work</h3>
-                            <p className="text-gray-600">
-                                See your work directly transform businesses and save thousands of hours every month.
-                            </p>
-                        </div>
+                        ))}
                     </div>
                 </div>
             </section>
 
             {/* Open Positions */}
-            <section className="bg-gray-50 py-20 px-6">
+            <section className="py-32 px-6 relative z-10 border-t border-white/5 bg-white/[0.02]">
                 <div className="container mx-auto max-w-4xl">
-                    <h2 className="text-4xl font-bold text-gray-900 mb-4 text-center">Open Positions</h2>
-                    <p className="text-center text-gray-600 mb-12">We're always looking for talented individuals to join our team.</p>
+                    <h2 className="text-4xl font-black text-white mb-4 text-center tracking-tight">Open Positions</h2>
+                    <p className="text-center text-slate-400 mb-16 font-bold">We hunt for the rare 1% who build with purpose.</p>
 
-                    <div className="bg-white rounded-xl p-8 border border-gray-200 text-center">
-                        <svg className="w-16 h-16 text-gray-400 mx-auto mb-4" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-                            <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M21 13.255A23.931 23.931 0 0112 15c-3.183 0-6.22-.62-9-1.745M16 6V4a2 2 0 00-2-2h-4a2 2 0 00-2 2v2m4 6h.01M5 20h14a2 2 0 002-2V8a2 2 0 00-2-2H5a2 2 0 00-2 2v10a2 2 0 002 2z" />
-                        </svg>
-                        <h3 className="text-2xl font-bold text-gray-900 mb-3">Join Our Talent Pool</h3>
-                        <p className="text-gray-600 mb-6">
-                            We're constantly growing. Even if you don't see a specific position listed, we'd love to hear from talented engineers, designers, and automation specialists.
+                    <div className="relative group overflow-hidden rounded-3xl border border-white/10 bg-[#0a0118] p-12 text-center shadow-2xl">
+                        <BorderBeam />
+                        <div className="mb-8 inline-flex h-20 w-20 items-center justify-center rounded-full bg-purple-500/10 text-purple-400 shadow-[0_0_20px_rgba(168,85,247,0.2)]">
+                            <Icons.Zap />
+                        </div>
+                        <h3 className="text-3xl font-black text-white mb-4">Join Our Talent Pool</h3>
+                        <p className="text-slate-400 mb-10 font-bold leading-relaxed">
+                            We're constantly growing. Even if you don't see a specific position, we'd love to hear from elite engineers, designers, and automation specialists.
                         </p>
-                        <p className="text-gray-900 font-semibold mb-2">Send your resume and portfolio to:</p>
-                        <a href="mailto:careers@automatelabs.in" className="text-blue-600 hover:text-blue-700 font-medium">
-                            careers@automatelabs.in
-                        </a>
+                        <div className="space-y-4">
+                            <p className="text-white font-black uppercase tracking-widest text-xs">Send resume & portfolio to</p>
+                            <a href="mailto:careers@automatelabs.in" className="inline-block text-2xl font-black text-transparent bg-clip-text bg-gradient-to-r from-purple-400 to-indigo-500 hover:drop-shadow-[0_0_10px_rgba(168,85,247,0.5)] transition-all">
+                                careers@automatelabs.in
+                            </a>
+                        </div>
                     </div>
                 </div>
             </section>
 
-            {/* CTA Section */}
-            <section className="bg-gray-900 text-white py-20 px-6">
-                <div className="container mx-auto max-w-4xl text-center">
-                    <h2 className="text-4xl font-bold mb-6">Ready to Make an Impact?</h2>
-                    <p className="text-xl text-gray-300 mb-8">
-                        Join us in building the future of business automation.
-                    </p>
-                    <a
-                        href="mailto:careers@automatelabs.in"
-                        className="inline-block bg-white text-gray-900 px-8 py-4 rounded-lg font-bold hover:bg-gray-100 transition-all"
-                    >
-                        Apply Now
-                    </a>
+            <footer className="py-20 border-t border-white/5 bg-[#0a0118]/50">
+                <div className="container mx-auto px-6 text-center">
+                    <div className="flex items-center justify-center gap-2 mb-8">
+                        <div className="flex h-8 w-8 items-center justify-center rounded-lg bg-white/10 text-white"><Icons.Zap /></div>
+                        <span className="text-xl font-black tracking-wider text-white">AutomateLabs</span>
+                    </div>
+                    <div className="text-xs font-black text-slate-600 lowercase tracking-widest leading-relaxed opacity-50">
+                        © {new Date().getFullYear()} AutomateLabs.in • built with intelligent systems
+                    </div>
                 </div>
-            </section>
+            </footer>
         </div>
     );
 };
