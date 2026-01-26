@@ -1,6 +1,6 @@
 
 import { Link } from 'react-router-dom';
-import { useState, useEffect } from 'react';
+
 
 // Re-using common components/icons for consistency
 const Icons = {
