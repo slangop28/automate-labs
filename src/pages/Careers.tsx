@@ -95,8 +95,8 @@ const Careers = () => {
                         </p>
                         <div className="space-y-4">
                             <p className="text-white font-black uppercase tracking-widest text-xs">Send resume & portfolio to</p>
-                            <a href="mailto:careers@automatelabs.in" className="inline-block text-2xl font-black text-transparent bg-clip-text bg-gradient-to-r from-purple-400 to-indigo-500 hover:drop-shadow-[0_0_10px_rgba(168,85,247,0.5)] transition-all">
-                                careers@automatelabs.in
+                            <a href="mailto:atul.pandey0028@gmail.com" className="inline-block text-2xl font-black text-transparent bg-clip-text bg-gradient-to-r from-purple-400 to-indigo-500 hover:drop-shadow-[0_0_10px_rgba(168,85,247,0.5)] transition-all">
+                                atul.pandey0028@gmail.com
                             </a>
                         </div>
                     </div>

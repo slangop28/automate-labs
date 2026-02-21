@@ -288,7 +288,18 @@ const CallbackModal = ({ isOpen, onClose }: { isOpen: boolean; onClose: () => vo
                         </div>
                         <div className="space-y-1">
                             <label className="text-xs font-black uppercase tracking-tighter text-slate-500">Phone Number</label>
-                            <input name="phone" type="tel" required className="w-full rounded-lg border border-white/10 bg-white/5 px-4 py-3 text-white focus:border-purple-500 focus:ring-1 focus:ring-purple-500 transition-all outline-none" placeholder="+1 (555) 000-0000" />
+                            <div className="flex gap-2">
+                                <select name="countryCode" className="w-[100px] rounded-lg border border-white/10 bg-white/5 px-2 py-3 text-white focus:border-purple-500 focus:ring-1 focus:ring-purple-500 transition-all outline-none cursor-pointer appearance-none hover:bg-white/10" defaultValue="+91">
+                                    <option value="+91" className="bg-[#0a0118]">🇮🇳 +91</option>
+                                    <option value="+1" className="bg-[#0a0118]">🇺🇸 +1</option>
+                                    <option value="+44" className="bg-[#0a0118]">🇬🇧 +44</option>
+                                    <option value="+971" className="bg-[#0a0118]">🇦🇪 +971</option>
+                                    <option value="+61" className="bg-[#0a0118]">🇦🇺 +61</option>
+                                    <option value="+65" className="bg-[#0a0118]">🇸🇬 +65</option>
+                                    <option value="+49" className="bg-[#0a0118]">🇩🇪 +49</option>
+                                </select>
+                                <input name="phone" type="tel" required className="flex-1 rounded-lg border border-white/10 bg-white/5 px-4 py-3 text-white focus:border-purple-500 focus:ring-1 focus:ring-purple-500 transition-all outline-none" placeholder="000 000 0000" />
+                            </div>
                         </div>
                         <ShimmerButton primary className="w-full !py-4" disabled={status === 'loading'}>
                             {status === 'loading' ? 'Processing...' : 'Schedule Call'}
@@ -467,9 +478,9 @@ const FeaturesSection = () => {
 const TestimonialsSection = () => {
     const [active, setActive] = useState(0);
     const testimonials: Testimonial[] = [
-        { quote: "AutomateLabs revolutionized how we handle logistics. What took 4 people a week is now done automatically in 30 mins.", author: "Sarah Jenkins", role: "COO", company: "LogiTech Global", metric: "500+ Hours Saved / Month" },
-        { quote: "The custom SaaS platform allowed us to scale from 100 to 10,000 users without a hiccup. World-class architecture.", author: "David Chen", role: "CTO", company: "FinStream", metric: "100x User Scaling" },
-        { quote: "Our conversion rate doubled within a month. Truly premium work.", author: "Elena Rodriguez", role: "Marketing Director", company: "LuxRealEstate", metric: "200% Conversion Increase" }
+        { quote: "AutomateLabs transformed how we manage our operations. What used to be a manual headache is now completely streamlined.", author: "Benie Curves", role: "Business Owner", company: "Wellness & Lifestyle", metric: "500+ Hours Saved / Month" },
+        { quote: "The automation systems they built for us allowed us to handle 5x the volume without adding more staff. Simply incredible.", author: "Local Electrician", role: "Owner", company: "Professional Services", metric: "300% Growth in Bookings" },
+        { quote: "Our online presence and customer reach tripled within months. Their intelligent systems are a game-changer.", author: "Shree rang Trendz", role: "Business Owner", company: "Retail & Trends", metric: "200% Increase in Reach" }
     ];
 
     useEffect(() => {
@@ -603,7 +614,15 @@ const Footer = () => {
                                 <form onSubmit={handleSubscribe} className="space-y-4">
                                     <div className="grid grid-cols-1 sm:grid-cols-2 gap-4">
                                         <input name="name" required className="w-full rounded-lg border border-white/10 bg-white/5 px-4 py-3 text-white placeholder-slate-600 focus:border-purple-500 transition-all outline-none text-sm" placeholder="Full Name" />
-                                        <input name="phone" type="tel" required className="w-full rounded-lg border border-white/10 bg-white/5 px-4 py-3 text-white placeholder-slate-600 focus:border-purple-500 transition-all outline-none text-sm" placeholder="Phone Number" />
+                                        <div className="flex gap-2">
+                                            <select name="countryCode" className="w-[80px] rounded-lg border border-white/10 bg-white/5 px-2 py-3 text-white focus:border-purple-500 transition-all outline-none text-xs cursor-pointer appearance-none hover:bg-white/10" defaultValue="+91">
+                                                <option value="+91" className="bg-[#0a0118]">+91</option>
+                                                <option value="+1" className="bg-[#0a0118]">+1</option>
+                                                <option value="+44" className="bg-[#0a0118]">+44</option>
+                                                <option value="+971" className="bg-[#0a0118]">+971</option>
+                                            </select>
+                                            <input name="phone" type="tel" required className="flex-1 rounded-lg border border-white/10 bg-white/5 px-4 py-3 text-white placeholder-slate-600 focus:border-purple-500 transition-all outline-none text-sm" placeholder="Phone Number" />
+                                        </div>
                                     </div>
                                     <div className="flex flex-col sm:flex-row gap-4">
                                         <input name="email" type="email" required className="flex-1 rounded-lg border border-white/10 bg-white/5 px-4 py-3 text-white placeholder-slate-600 focus:border-purple-500 transition-all outline-none text-sm" placeholder="Email Address" />
@@ -679,8 +698,17 @@ const AuditModal = ({ isOpen, onClose }: { isOpen: boolean; onClose: () => void 
                                     <input name="companyName" required className="w-full rounded-lg border border-white/10 bg-white/5 px-4 py-2 text-white focus:border-purple-500 outline-none transition-all placeholder:text-slate-700" placeholder="e.g. Acme Corp" />
                                 </div>
                                 <div className="space-y-1">
-                                    <label className="text-xs font-black uppercase text-slate-500">Phone (+91)</label>
-                                    <input name="phone" type="tel" required className="w-full rounded-lg border border-white/10 bg-white/5 px-4 py-2 text-white focus:border-purple-500 outline-none transition-all placeholder:text-slate-700" placeholder="+91 00000 00000" />
+                                    <label className="text-xs font-black uppercase text-slate-500">Phone Number</label>
+                                    <div className="flex gap-2">
+                                        <select name="countryCode" className="w-[100px] rounded-lg border border-white/10 bg-white/5 px-2 py-2 text-white focus:border-purple-500 outline-none transition-all text-sm cursor-pointer appearance-none hover:bg-white/10" defaultValue="+91">
+                                            <option value="+91" className="bg-[#0a0118]">🇮🇳 +91</option>
+                                            <option value="+1" className="bg-[#0a0118]">🇺🇸 +1</option>
+                                            <option value="+44" className="bg-[#0a0118]">🇬🇧 +44</option>
+                                            <option value="+971" className="bg-[#0a0118]">🇦🇪 +971</option>
+                                            <option value="+61" className="bg-[#0a0118]">🇦🇺 +61</option>
+                                        </select>
+                                        <input name="phone" type="tel" required className="flex-1 rounded-lg border border-white/10 bg-white/5 px-4 py-2 text-white focus:border-purple-500 outline-none transition-all placeholder:text-slate-700" placeholder="000 000 0000" />
+                                    </div>
                                 </div>
                             </div>
                             <div className="grid gap-6 md:grid-cols-2">
