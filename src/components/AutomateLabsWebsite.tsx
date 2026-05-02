@@ -1,6 +1,7 @@
 
 import { useState, useEffect, useRef } from 'react';
 import { Link } from 'react-router-dom';
+import { supabase } from '../lib/supabaseClient';
 
 // --- Types ---
 
@@ -35,33 +36,16 @@ interface Service {
 
 // --- Helper Functions ---
 
-const submitToSupabase = async (table: string, data: any) => {
-    const supabaseUrl = import.meta.env.VITE_SUPABASE_URL;
-    const supabaseKey = import.meta.env.VITE_SUPABASE_ANON_KEY;
-
-    if (!supabaseUrl || !supabaseKey) {
-        console.error('Supabase env vars missing! Check .env file.');
-        return false;
-    }
-
+const submitToSupabase = async (table: string, data: any): Promise<boolean> => {
     try {
-        const response = await fetch(`${supabaseUrl}/rest/v1/${table}`, {
-            method: 'POST',
-            headers: {
-                'Content-Type': 'application/json',
-                'apikey': supabaseKey,
-                'Authorization': `Bearer ${supabaseKey}`,
-                'Prefer': 'return=minimal'
-            },
-            body: JSON.stringify(data)
-        });
-        if (!response.ok) {
-            const errText = await response.text();
-            console.error(`Supabase [${table}] ${response.status}:`, errText);
+        const { error } = await supabase.from(table).insert([data]);
+        if (error) {
+            console.error(`Supabase [${table}] error:`, error.message, error.details);
+            return false;
         }
-        return response.ok;
-    } catch (error) {
-        console.error('Submission Error:', error);
+        return true;
+    } catch (err) {
+        console.error('Submission Error:', err);
         return false;
     }
 };
