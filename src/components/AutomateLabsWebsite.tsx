@@ -39,6 +39,11 @@ const submitToSupabase = async (table: string, data: any) => {
     const supabaseUrl = import.meta.env.VITE_SUPABASE_URL;
     const supabaseKey = import.meta.env.VITE_SUPABASE_ANON_KEY;
 
+    if (!supabaseUrl || !supabaseKey) {
+        console.error('Supabase env vars missing! Check .env file.');
+        return false;
+    }
+
     try {
         const response = await fetch(`${supabaseUrl}/rest/v1/${table}`, {
             method: 'POST',
@@ -50,6 +55,10 @@ const submitToSupabase = async (table: string, data: any) => {
             },
             body: JSON.stringify(data)
         });
+        if (!response.ok) {
+            const errText = await response.text();
+            console.error(`Supabase [${table}] ${response.status}:`, errText);
+        }
         return response.ok;
     } catch (error) {
         console.error('Submission Error:', error);
@@ -225,11 +234,14 @@ const InteractionLayer = () => {
     return <canvas ref={canvasRef} className="fixed inset-0 z-[100] pointer-events-none opacity-80 mix-blend-screen" />;
 };
 
+// Inline noise SVG as data URI — avoids external 404 request
+const NOISE_SVG = "data:image/svg+xml,%3Csvg viewBox='0 0 256 256' xmlns='http://www.w3.org/2000/svg'%3E%3Cfilter id='n'%3E%3CfeTurbulence type='fractalNoise' baseFrequency='0.9' numOctaves='4' stitchTiles='stitch'/%3E%3C/filter%3E%3Crect width='100%25' height='100%25' filter='url(%23n)'/%3E%3C/svg%3E";
+
 const AuroraBackground = () => (
     <div className="fixed inset-0 z-0 pointer-events-none overflow-hidden">
         <div className="absolute top-[-10%] left-[-10%] w-[40%] h-[40%] rounded-full bg-purple-900/20 blur-[120px] animate-pulse"></div>
         <div className="absolute bottom-[-10%] right-[-10%] w-[50%] h-[50%] rounded-full bg-indigo-900/10 blur-[150px]"></div>
-        <div className="absolute inset-0 bg-[url('https://grainy-gradients.vercel.app/noise.svg')] opacity-20 mix-blend-soft-light"></div>
+        <div className="absolute inset-0 opacity-20 mix-blend-soft-light" style={{ backgroundImage: `url("${NOISE_SVG}")` }}></div>
     </div>
 );
 
