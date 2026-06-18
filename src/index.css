@@ -3,17 +3,59 @@
 @tailwind utilities;
 
 :root {
-  --bg-base: #0a0118;
-  --c-purple: #4c1d95;
-  --c-violet: #8b5cf6;
-  --c-indigo: #6366f1;
-  --c-slate: #cbd5e1;
+  --cream: #F0EEE6;
+  --paper: #FAF9F5;
+  --clay: #D97757;
+  --clay-deep: #BD5D3A;
+  --ink: #1F1E1B;
+  --umber: #6B5D4F;
+  --line: #E3DDD0;
+}
+
+html {
+  scroll-behavior: smooth;
 }
 
 body {
-  background-color: var(--bg-base);
-  color: #f8fafc;
+  background-color: var(--cream);
+  color: var(--ink);
+  font-family: 'Inter', system-ui, sans-serif;
+  -webkit-font-smoothing: antialiased;
+  text-rendering: optimizeLegibility;
   overflow-x: hidden;
+}
+
+::selection {
+  background: rgba(217, 119, 87, 0.22);
+  color: var(--ink);
+}
+
+/* Subtle paper grain so the cream never reads as flat/templated */
+.bg-grain {
+  background-image: radial-gradient(rgba(31, 30, 27, 0.04) 1px, transparent 1px);
+  background-size: 22px 22px;
+}
+
+/* Scroll-reveal primitive (paired with the <Reveal/> component) */
+.reveal {
+  opacity: 0;
+  will-change: opacity, transform;
+}
+
+.reveal.is-visible {
+  animation: fadeUp 0.7s cubic-bezier(0.19, 1, 0.22, 1) forwards;
+}
+
+@keyframes fadeUp {
+  0% {
+    opacity: 0;
+    transform: translateY(24px);
+  }
+
+  100% {
+    opacity: 1;
+    transform: translateY(0);
+  }
 }
 
 @keyframes shimmer {
@@ -26,42 +68,24 @@ body {
   }
 }
 
-@keyframes border-beam {
-  100% {
-    offset-distance: 100%;
-  }
-}
+@media (prefers-reduced-motion: reduce) {
 
-@keyframes gradient {
-  0% {
-    background-position: 0% 50%;
+  html {
+    scroll-behavior: auto;
   }
 
-  50% {
-    background-position: 100% 50%;
+  .reveal,
+  .reveal.is-visible {
+    opacity: 1 !important;
+    animation: none !important;
+    transform: none !important;
   }
 
-  100% {
-    background-position: 0% 50%;
+  *,
+  *::before,
+  *::after {
+    animation-duration: 0.001ms !important;
+    animation-iteration-count: 1 !important;
+    transition-duration: 0.001ms !important;
   }
-}
-
-.animate-gradient {
-  background-size: 200% auto;
-  animation: gradient 5s linear infinite;
-}
-
-@layer utilities {
-  .ease-expo {
-    transition-timing-function: cubic-bezier(0.19, 1, 0.22, 1);
-  }
-}
-
-.animate-border-beam {
-  animation: border-beam 4s linear infinite;
-  offset-path: border-box;
-}
-
-.perspective-1000 {
-  perspective: 1000px;
 }

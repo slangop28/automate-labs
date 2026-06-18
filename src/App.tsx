@@ -1,8 +1,8 @@
-import AutomateLabsWebsite from './components/AutomateLabsWebsite'
+import Home from './pages/Home'
 
 function App() {
   return (
-    <AutomateLabsWebsite />
+    <Home />
   )
 }
 
