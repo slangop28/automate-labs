@@ -116,10 +116,10 @@ const moreProjects: MiniProject[] = [
     },
     {
         icon: Icons.Pen,
-        tag: 'Content Automation',
+        tag: 'Speech-to-Text',
         title: 'InstaScribe',
-        desc: 'Turns a single idea or source into scroll-stopping, Instagram-ready scripts and captions — automatically.',
-        stack: ['LLM', 'Automation'],
+        desc: 'Transcribes Instagram reels and short-form video into clean, speaker-labelled text — searchable and ready to repurpose.',
+        stack: ['Whisper', 'pyannote', 'Python'],
     },
     {
         icon: Icons.Film,
