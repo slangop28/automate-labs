@@ -12,8 +12,17 @@ dist
 dist-ssr
 *.local
 .env
+.env.*
+!.env.example
 mcp_config.json
+*mcp*.json
+.agent/
 .agents/
+_agent/
+_agents/
+*.pem
+*.key
+*.cert
 
 # Editor directories and files
 .vscode/*
