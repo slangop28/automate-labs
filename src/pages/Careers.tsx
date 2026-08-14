@@ -37,7 +37,7 @@ const Careers = () => (
 
         <section className="py-20 md:py-28">
             <Container>
-                <SectionHeading center eyebrow="Why us" title="Why Automate Labs?" />
+                <SectionHeading center eyebrow="Why us" title="Why SmartVyapari?" />
                 <div className="mt-14 grid gap-6 md:grid-cols-3">
                     {reasons.map((r, i) => (
                         <Reveal key={r.title} delay={i * 80} className="h-full">

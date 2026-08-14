@@ -1,4 +1,4 @@
-# CLAUDE.md — Automate Labs Website
+# CLAUDE.md — SmartVyapari Website
 
 **Always read `LEARNINGS.md` at the start of every session before making changes.**
 
@@ -8,7 +8,7 @@ This file is the operating manual for the Automate Labs marketing website. Read 
 
 ## 1. What this project is
 
-The public marketing website for **Automate Labs**, an AI automation agency owned by **Atul Pandey** (Ahmedabad, India). This is a **lead-generation site**, not a brochure. Every page exists to convert a visitor into a booked call or a captured lead.
+The public marketing website for **SmartVyapari** (`smartvyapari.online`), an AI automation agency owned by **Atul Pandey** (Ahmedabad, India). This is a **lead-generation site**, not a brochure. Every page exists to convert a visitor into a booked call or a captured lead.
 
 **Primary success metric:** qualified inbound leads (form submissions → notification in Atul's inbox → fast reply). Everything else (animations, copy, design) serves that.
 

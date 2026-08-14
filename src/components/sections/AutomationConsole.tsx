@@ -136,7 +136,7 @@ const AutomationConsole = () => {
                 <SectionHeading
                     eyebrow="See it work"
                     title="Watch the busywork disappear"
-                    subtitle="Scroll through what an Automate Labs system actually does once it's running."
+                    subtitle="Scroll through what a SmartVyapari system actually does once it's running."
                 />
 
                 <div className="mt-14 grid gap-12 lg:grid-cols-2">

@@ -35,7 +35,7 @@ const AboutUs = () => (
                         We build the systems that <span className="text-clay">run the busywork.</span>
                     </h1>
                     <p className="mt-6 max-w-2xl text-lg leading-relaxed text-umber">
-                        Automate Labs bridges the gap between human creativity and operational scale. We don't sell AI
+                        SmartVyapari bridges the gap between human creativity and operational scale. We don't sell AI
                         slop — we engineer systems that solve real business problems and deliver measurable results.
                     </p>
                 </Reveal>

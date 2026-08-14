@@ -28,7 +28,7 @@ const Hero = () => (
                     </h1>
 
                     <p className="mt-6 max-w-xl text-lg leading-relaxed text-umber">
-                        Automate Labs designs end-to-end AI automations — custom workflows, voice &amp; WhatsApp agents,
+                        SmartVyapari designs end-to-end AI automations — custom workflows, voice &amp; WhatsApp agents,
                         AI films, and agents — that replace repetitive work and grow your bottom line.
                     </p>
 

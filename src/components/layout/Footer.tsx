@@ -42,7 +42,7 @@ const Footer = () => (
                             <Icons.Bolt className="h-5 w-5" />
                         </span>
                         <span className="font-display text-lg font-semibold tracking-tight text-ink">
-                            Automate<span className="text-clay">Labs</span>
+                            Smart<span className="text-clay">Vyapari</span>
                         </span>
                     </div>
                     <p className="mt-4 max-w-xs font-display text-lg leading-snug text-ink">
@@ -73,7 +73,7 @@ const Footer = () => (
             </div>
 
             <div className="mt-14 flex flex-col items-center justify-between gap-4 border-t border-line pt-8 text-sm text-umber md:flex-row">
-                <span>© {new Date().getFullYear()} Automate Labs · Ahmedabad, India</span>
+                <span>© {new Date().getFullYear()} SmartVyapari · Ahmedabad, India</span>
                 <span className="font-mono text-xs">built with intelligent systems</span>
             </div>
         </div>

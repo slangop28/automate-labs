@@ -24,10 +24,22 @@ export async function submitLead(lead: Lead): Promise<boolean> {
     let ok = false;
 
     try {
-        const { error } = await supabase.from('contacts').insert([payload]);
-        if (!error) ok = true;
-    } catch {
-        /* table may not exist yet — the webhook is the primary path */
+        // Write to Supabase 'audits' table (system of record)
+        const auditPayload = {
+            companyName: lead.company || lead.name || 'Website Lead',
+            email: lead.email,
+            phone: lead.phone || '',
+            niche: lead.source || 'Website Contact Form',
+            bottlenecks: (lead.name ? `Contact: ${lead.name}\n\n` : '') + (lead.message || ''),
+        };
+        const { error } = await supabase.from('audits').insert([auditPayload]);
+        if (!error) {
+            ok = true;
+        } else {
+            console.error('[SmartVyapari] Supabase audit insert error:', error.message);
+        }
+    } catch (err) {
+        console.error('[SmartVyapari] Supabase insert exception:', err);
     }
 
     if (WEBHOOK) {
@@ -45,6 +57,6 @@ export async function submitLead(lead: Lead): Promise<boolean> {
     }
 
     // Demo mode: no webhook configured yet.
-    console.info('[Automate Labs] Lead captured (demo mode — set VITE_N8N_WEBHOOK_URL to send email):', payload);
+    console.info('[SmartVyapari] Lead captured (demo mode — set VITE_N8N_WEBHOOK_URL to send email):', payload);
     return true;
 }

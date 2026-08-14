@@ -11,7 +11,7 @@ interface Testimonial {
 
 const testimonials: Testimonial[] = [
     {
-        quote: 'AutomateLabs transformed how we manage our operations. What used to be a manual headache is now completely streamlined.',
+        quote: 'SmartVyapari transformed how we manage our operations. What used to be a manual headache is now completely streamlined.',
         author: 'Benie Curves',
         company: 'Wellness & Lifestyle',
         metric: '500+ hours saved / month',

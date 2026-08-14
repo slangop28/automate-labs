@@ -19,7 +19,7 @@ const Logo = () => (
             <Icons.Bolt className="h-5 w-5" />
         </span>
         <span className="font-display text-lg font-semibold tracking-tight text-ink">
-            Automate<span className="text-clay">Labs</span>
+            Smart<span className="text-clay">Vyapari</span>
         </span>
     </Link>
 );

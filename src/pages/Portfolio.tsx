@@ -33,9 +33,9 @@ const flagship: Project[] = [
     {
         icon: Icons.Spark,
         tag: 'Web + Automation',
-        title: 'AutomateLabs.in — This Website',
+        title: 'smartvyapari.online — This Website',
         summary:
-            'The entire Automate Labs platform, engineered end to end: an animated marketing site with live lead-capture, a Supabase backend, and modular pages — built in-house as both our storefront and proof of capability.',
+            'The entire SmartVyapari platform, engineered end to end: an animated marketing site with live lead-capture, a Supabase backend, and modular pages — built in-house as both our storefront and proof of capability.',
         stack: ['React + TypeScript', 'Tailwind CSS', 'Supabase backend', 'Custom animation', 'Cloud deployment'],
         metrics: [
             { value: '100%', label: 'in-house built' },

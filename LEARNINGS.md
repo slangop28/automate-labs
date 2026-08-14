@@ -1,6 +1,7 @@
-# LEARNINGS.md — Automate Labs Website
+# LEARNINGS.md — SmartVyapari Website
 
 Hard-won, project-specific gotchas. Add to this whenever a non-obvious lesson costs time once.
+Brand: **SmartVyapari** (`smartvyapari.online`).
 
 ## Known traps (2026-06-18)
 

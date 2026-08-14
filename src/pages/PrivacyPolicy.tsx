@@ -21,7 +21,7 @@ const PrivacyPolicy = () => (
                         <div>
                             <h2 className="font-display text-2xl font-semibold tracking-tight text-ink">1. Introduction</h2>
                             <p className="mt-3 leading-relaxed text-umber">
-                                Automate Labs ("we," "our," or "us") is committed to protecting your privacy. This policy
+                                SmartVyapari ("we," "our," or "us") is committed to protecting your privacy. This policy
                                 explains how we collect, use, disclose, and safeguard your information when you visit our
                                 website or use our services.
                             </p>
