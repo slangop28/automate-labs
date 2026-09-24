@@ -5,6 +5,7 @@ import Container from '../components/ui/Container';
 import Reveal from '../components/ui/Reveal';
 import Button from '../components/ui/Button';
 import Icons from '../components/ui/Icons';
+import SEO from '../components/SEO';
 
 type Category = 'automation' | 'agents' | 'content' | 'foundations';
 type ResType = 'Tool' | 'Docs' | 'Course' | 'Free';
@@ -68,6 +69,11 @@ const Learning = () => {
 
     return (
         <div className="min-h-screen bg-cream text-ink">
+            <SEO
+                title="AI Automation & Agents Free Learning Hub"
+                description="Curated tools, documentation, courses, and guides for building with AI, n8n workflow automation, Claude, and agentic workflows."
+                canonicalPath="/learning"
+            />
             <Navbar />
 
             <section className="bg-grain relative overflow-hidden pt-32 pb-14 md:pt-40 md:pb-16">

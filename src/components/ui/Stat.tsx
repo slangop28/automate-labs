@@ -11,7 +11,7 @@ interface StatProps {
 /** Counts up from 0 to `value` once it scrolls into view. */
 const Stat = ({ value, prefix = '', suffix = '', label }: StatProps) => {
     const ref = useRef<HTMLDivElement>(null);
-    const [display, setDisplay] = useState(0);
+    const [display, setDisplay] = useState(value);
 
     useEffect(() => {
         const el = ref.current;

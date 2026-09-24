@@ -17,7 +17,7 @@ const Hero = () => (
                     <div className="mb-6 inline-flex items-center gap-2 rounded-full border border-line bg-paper px-4 py-1.5">
                         <span className="h-2 w-2 rounded-full bg-clay" />
                         <span className="text-xs font-semibold uppercase tracking-[0.16em] text-umber">
-                            AI Automation Agency · Ahmedabad
+                            AI Automation Agency · Surat, India
                         </span>
                     </div>
 

@@ -4,6 +4,7 @@ import Container from '../components/ui/Container';
 import SectionHeading from '../components/ui/SectionHeading';
 import Reveal from '../components/ui/Reveal';
 import Icons from '../components/ui/Icons';
+import SEO from '../components/SEO';
 import type { FC } from 'react';
 
 const reasons: { icon: FC<{ className?: string }>; title: string; desc: string }[] = [
@@ -14,6 +15,11 @@ const reasons: { icon: FC<{ className?: string }>; title: string; desc: string }
 
 const Careers = () => (
     <div className="min-h-screen bg-cream text-ink">
+        <SEO
+            title="Careers at SmartVyapari — Build Autonomous Work"
+            description="Join SmartVyapari as an engineer, designer, or AI automation specialist building systems that replace repetitive work."
+            canonicalPath="/careers"
+        />
         <Navbar />
 
         <section className="bg-grain relative overflow-hidden pt-32 pb-16 md:pt-40 md:pb-20">
@@ -68,10 +74,10 @@ const Careers = () => (
                         </p>
                         <p className="mt-8 text-xs font-semibold uppercase tracking-wider text-umber">Send resume &amp; portfolio to</p>
                         <a
-                            href="mailto:atul.pandey0028@gmail.com"
+                            href="mailto:hello@smartvyapari.online"
                             className="mt-2 inline-block font-display text-2xl font-semibold text-clay hover:text-clay-deep"
                         >
-                            atul.pandey0028@gmail.com
+                            hello@smartvyapari.online
                         </a>
                     </div>
                 </Reveal>

@@ -6,6 +6,7 @@ import Button from '../components/ui/Button';
 import Reveal from '../components/ui/Reveal';
 import Stat from '../components/ui/Stat';
 import Icons from '../components/ui/Icons';
+import SEO from '../components/SEO';
 
 interface Metric {
     value: number;
@@ -218,6 +219,11 @@ const CaseStudies = () => {
 
     return (
         <div className="min-h-screen bg-cream text-ink">
+            <SEO
+                title="AI Automation Case Studies & Results"
+                description="Explore real AI automation case studies: e-commerce order routing, automated CRM lead qualification, financial reporting pipelines, and creator content engines."
+                canonicalPath="/case-studies"
+            />
             <Navbar />
 
             {/* Hero */}

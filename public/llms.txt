@@ -1,0 +1,43 @@
+# SmartVyapari
+
+> We don't sell AI slop. We build systems that save revenue.
+
+SmartVyapari is an AI automation agency based in Ahmedabad, India, serving businesses globally. We engineer end-to-end autonomous systems — custom workflow automations, intelligent voice & WhatsApp agents, AI filmmaking, enterprise knowledge systems (RAG), and strategic automation consulting — that replace repetitive manual tasks and deliver measurable ROI.
+
+## Core Services
+
+- **Custom AI Automation Systems**: End-to-end workflow automation connecting CRMs, databases, email, and internal tools using engines like n8n and Supabase.
+- **AI Voice & WhatsApp Agents**: 24/7 human-like conversational agents for inbound/outbound calls, lead qualification, appointment booking, and CRM sync.
+- **AI Filmmaking & Video Production**: High-converting cinematic video ads, UGC content, founder avatars, and programmatic video pipelines (Remotion/HyperFrames) produced at a fraction of traditional production costs.
+- **AI Agents & Enterprise RAG**: Intelligent agents with retrieval-augmented generation for querying 150+ page enterprise document knowledge bases with source-cited accuracy.
+- **AI Strategy & Operations Consulting**: Operations audits, automation opportunity mapping, and ROI prioritization before writing code.
+
+## Target Customers
+
+- Small and medium-sized businesses (SMBs) suffering from manual operational bottlenecks.
+- B2B sales teams needing autonomous lead qualification, instant response times, and automated CRM hygiene.
+- E-commerce & retail brands needing automated order routing, multi-channel inventory reconciliation, and 24/7 customer support.
+- Content creators & digital agencies scaling video production and brand partnership pipelines.
+
+## Positioning & Philosophy
+
+- **Systems, not slop**: We reject generic wrapper tools, superficial prompts, and brittle no-code shortcuts. Every build is tailored, reliable, and integrated directly into production stacks.
+- **Measurable ROI first**: We map estimated hours and revenue saved before initiating any build.
+- **Production-grade reliability**: Built with robust engineering practices using Claude Code, n8n, Supabase, PostgreSQL, React, and vector databases.
+
+## Key Links & Resources
+
+- [Home](https://smartvyapari.online/): Overview of services, interactive console, and audit booking.
+- [Why Custom Systems (Comparison)](https://smartvyapari.online/why-custom-systems): Why custom AI architecture beats generic prompt wrappers, freelancers, and off-the-shelf SaaS.
+- [Case Studies](https://smartvyapari.online/case-studies): Documented outcomes, time savings, and revenue metrics from production deployments.
+- [Portfolio & Lab](https://smartvyapari.online/portfolio): Breakdown of flagship builds, technical architecture, and active agent deployments.
+- [Free Learning Hub](https://smartvyapari.online/learning): Curated guides, documentation, and tools for building with AI automation.
+- [About Us](https://smartvyapari.online/about): Our mission, approach, and engineering principles.
+- [Contact & Free Audit](https://smartvyapari.online/#contact): Book a 30-minute operational audit and automation roadmap consultation.
+
+## Contact Information
+
+- **Website**: https://smartvyapari.online
+- **Email**: hello@smartvyapari.online
+- **Instagram**: https://instagram.com/iamatul_28
+- **Location**: Rajhans Belliza, Surat, Gujarat, India

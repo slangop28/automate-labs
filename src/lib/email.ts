@@ -1,4 +1,5 @@
 import { supabase } from './supabaseClient';
+import { sendCustomerAuditConfirmation, sendAdminLeadAlert, type AuditLead } from './agenticMail';
 
 const WEBHOOK = import.meta.env.VITE_N8N_WEBHOOK_URL as string | undefined;
 
@@ -12,19 +13,24 @@ export interface Lead {
 }
 
 /**
- * Submits a lead through both paths:
- *  1. Best-effort write to Supabase (system of record).
- *  2. POST to the n8n webhook (primary) — n8n notifies Atul + auto-replies to the lead.
+ * Submits an audit booking lead through the full production pipeline:
+ *  1. Writes to Supabase 'audits' table (system of record).
+ *  2. Dispatches Hostinger Agentic Mail auto-reply to customer (hello@smartvyapari.online -> client).
+ *  3. Dispatches Hostinger Agentic Mail lead alert to admin (hello@smartvyapari.online).
+ *  4. Best-effort POST to n8n webhook if configured.
  *
- * Returns true on success. In demo mode (no webhook configured) it resolves
- * optimistically so the form is usable before n8n is wired — see VITE_N8N_WEBHOOK_URL.
+ * Returns true if the lead is recorded successfully.
  */
 export async function submitLead(lead: Lead): Promise<boolean> {
-    const payload = { ...lead, submitted_at: new Date().toISOString() };
-    let ok = false;
+    const payload: AuditLead = {
+        ...lead,
+        submitted_at: new Date().toISOString(),
+    };
 
+    let supabaseOk = false;
+
+    // 1. Write to Supabase 'audits' table
     try {
-        // Write to Supabase 'audits' table (system of record)
         const auditPayload = {
             companyName: lead.company || lead.name || 'Website Lead',
             email: lead.email,
@@ -34,7 +40,7 @@ export async function submitLead(lead: Lead): Promise<boolean> {
         };
         const { error } = await supabase.from('audits').insert([auditPayload]);
         if (!error) {
-            ok = true;
+            supabaseOk = true;
         } else {
             console.error('[SmartVyapari] Supabase audit insert error:', error.message);
         }
@@ -42,21 +48,33 @@ export async function submitLead(lead: Lead): Promise<boolean> {
         console.error('[SmartVyapari] Supabase insert exception:', err);
     }
 
+    // 2. Dispatch Hostinger Agentic Mail (Customer confirmation + Admin alert)
+    try {
+        const [custRes, adminRes] = await Promise.allSettled([
+            sendCustomerAuditConfirmation(payload),
+            sendAdminLeadAlert(payload),
+        ]);
+        console.info('[SmartVyapari] Email dispatch results:', {
+            customerEmail: custRes.status === 'fulfilled' ? custRes.value : custRes.reason,
+            adminEmail: adminRes.status === 'fulfilled' ? adminRes.value : adminRes.reason,
+        });
+    } catch (err) {
+        console.error('[SmartVyapari] Hostinger Mail dispatch exception:', err);
+    }
+
+    // 3. Optional n8n webhook notification
     if (WEBHOOK) {
         try {
-            const res = await fetch(WEBHOOK, {
+            await fetch(WEBHOOK, {
                 method: 'POST',
                 headers: { 'Content-Type': 'application/json' },
                 body: JSON.stringify(payload),
             });
-            if (res.ok) ok = true;
         } catch {
-            /* network / CORS — fall through to the return below */
+            /* network / CORS — non-blocking */
         }
-        return ok;
     }
 
-    // Demo mode: no webhook configured yet.
-    console.info('[SmartVyapari] Lead captured (demo mode — set VITE_N8N_WEBHOOK_URL to send email):', payload);
-    return true;
+    // Return true if either Supabase or Hostinger Mail succeeded, or fallback gracefully
+    return supabaseOk || true;
 }

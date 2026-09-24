@@ -44,8 +44,8 @@ const ContactSection = () => (
                         </div>
 
                         <div className="mt-8 flex flex-wrap gap-4 text-sm">
-                            <a href="mailto:atul.pandey0028@gmail.com" className="inline-flex items-center gap-2 font-medium text-ink hover:text-clay">
-                                <Icons.ArrowUpRight className="h-4 w-4" /> atul.pandey0028@gmail.com
+                            <a href="mailto:hello@smartvyapari.online" className="inline-flex items-center gap-2 font-medium text-ink hover:text-clay">
+                                <Icons.ArrowUpRight className="h-4 w-4" /> hello@smartvyapari.online
                             </a>
                             <a href="https://instagram.com/iamatul_28" target="_blank" rel="noopener noreferrer" className="inline-flex items-center gap-2 font-medium text-ink hover:text-clay">
                                 <Icons.ArrowUpRight className="h-4 w-4" /> @iamatul_28

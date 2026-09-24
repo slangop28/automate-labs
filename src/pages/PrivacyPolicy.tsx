@@ -2,9 +2,15 @@ import Navbar from '../components/layout/Navbar';
 import Footer from '../components/layout/Footer';
 import Container from '../components/ui/Container';
 import Reveal from '../components/ui/Reveal';
+import SEO from '../components/SEO';
 
 const PrivacyPolicy = () => (
     <div className="min-h-screen bg-cream text-ink">
+        <SEO
+            title="Privacy Policy"
+            description="SmartVyapari's privacy policy, security standards, and data protection commitments."
+            canonicalPath="/privacy"
+        />
         <Navbar />
 
         <section className="pt-32 pb-12 md:pt-40">
@@ -76,7 +82,7 @@ const PrivacyPolicy = () => (
                             <h2 className="font-display text-2xl font-semibold tracking-tight text-ink">6. Contact</h2>
                             <p className="mt-3 leading-relaxed text-umber">
                                 For data inquiries, reach out at{' '}
-                                <a href="mailto:atul.pandey0028@gmail.com" className="font-medium text-clay hover:text-clay-deep">atul.pandey0028@gmail.com</a>.
+                                <a href="mailto:hello@smartvyapari.online" className="font-medium text-clay hover:text-clay-deep">hello@smartvyapari.online</a>.
                             </p>
                         </div>
                     </div>

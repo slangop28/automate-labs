@@ -5,6 +5,7 @@ import SectionHeading from '../components/ui/SectionHeading';
 import Reveal from '../components/ui/Reveal';
 import Button from '../components/ui/Button';
 import Icons from '../components/ui/Icons';
+import SEO from '../components/SEO';
 import type { FC } from 'react';
 
 interface Project {
@@ -189,6 +190,11 @@ const ProjectCard = ({ p }: { p: Project }) => (
 
 const Portfolio = () => (
     <div className="min-h-screen bg-cream text-ink">
+        <SEO
+            title="Portfolio & AI Systems Lab"
+            description="Explore our AI systems: Enterprise RAG Document Intelligence, WhatsApp Automation Agents, Remotion Video Factory, and Agentic Engineering pipelines."
+            canonicalPath="/portfolio"
+        />
         <Navbar />
 
         <section className="bg-grain relative overflow-hidden pt-32 pb-16 md:pt-40 md:pb-20">

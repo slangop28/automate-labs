@@ -37,7 +37,7 @@ const ContactForm = () => {
                 </div>
                 <h3 className="font-display text-2xl font-semibold text-ink">Got it — talk soon.</h3>
                 <p className="mt-2 text-sm text-umber">
-                    Your message is in. We'll reply from Atul's inbox within one business day.
+                    Your message is in. We'll reply from hello@smartvyapari.online within one business day.
                 </p>
             </div>
         );
@@ -77,7 +77,7 @@ const ContactForm = () => {
             </div>
 
             {status === 'error' && (
-                <p className="mt-4 text-sm text-clay-deep">Something went wrong. Please try again or email atul.pandey0028@gmail.com.</p>
+                <p className="mt-4 text-sm text-clay-deep">Something went wrong. Please try again or email hello@smartvyapari.online.</p>
             )}
 
             <button

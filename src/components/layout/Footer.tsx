@@ -17,10 +17,12 @@ const columns: FooterColumn[] = [
     {
         title: 'Company',
         links: [
+            { label: 'Why Custom Systems', to: '/why-custom-systems' },
             { label: 'Case Studies', to: '/case-studies' },
             { label: 'Learning', to: '/learning' },
             { label: 'Portfolio', to: '/portfolio' },
             { label: 'About', to: '/about' },
+            { label: 'FAQ', href: '/#faq' },
         ],
     },
     {
@@ -73,7 +75,7 @@ const Footer = () => (
             </div>
 
             <div className="mt-14 flex flex-col items-center justify-between gap-4 border-t border-line pt-8 text-sm text-umber md:flex-row">
-                <span>© {new Date().getFullYear()} SmartVyapari · Ahmedabad, India</span>
+                <span>© {new Date().getFullYear()} SmartVyapari · Rajhans Belliza, Surat, Gujarat, India</span>
                 <span className="font-mono text-xs">built with intelligent systems</span>
             </div>
         </div>

@@ -5,6 +5,7 @@ import SectionHeading from '../components/ui/SectionHeading';
 import Reveal from '../components/ui/Reveal';
 import Button from '../components/ui/Button';
 import Icons from '../components/ui/Icons';
+import SEO from '../components/SEO';
 import type { FC } from 'react';
 
 const approach: { icon: FC<{ className?: string }>; title: string; desc: string }[] = [
@@ -21,6 +22,11 @@ const stats = [
 
 const AboutUs = () => (
     <div className="min-h-screen bg-cream text-ink">
+        <SEO
+            title="About SmartVyapari — AI Automation Agency"
+            description="Learn how SmartVyapari helps businesses replace manual busywork with custom AI automation, voice agents, and intelligent workflows built for measurable revenue growth."
+            canonicalPath="/about"
+        />
         <Navbar />
 
         <section className="bg-grain relative overflow-hidden pt-32 pb-16 md:pt-40 md:pb-20">

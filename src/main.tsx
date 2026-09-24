@@ -9,6 +9,7 @@ import AboutUs from './pages/AboutUs'
 import PrivacyPolicy from './pages/PrivacyPolicy'
 import Careers from './pages/Careers'
 import Learning from './pages/Learning'
+import Comparison from './pages/Comparison'
 import ScrollToTop from './components/ScrollToTop'
 
 createRoot(document.getElementById('root')!).render(
@@ -21,6 +22,7 @@ createRoot(document.getElementById('root')!).render(
         <Route path="/learning" element={<Learning />} />
         <Route path="/portfolio" element={<Portfolio />} />
         <Route path="/about" element={<AboutUs />} />
+        <Route path="/why-custom-systems" element={<Comparison />} />
         <Route path="/privacy" element={<PrivacyPolicy />} />
         <Route path="/careers" element={<Careers />} />
       </Routes>
