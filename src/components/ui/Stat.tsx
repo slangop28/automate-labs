@@ -45,12 +45,12 @@ const Stat = ({ value, prefix = '', suffix = '', label }: StatProps) => {
 
     return (
         <div ref={ref}>
-            <div className="font-display text-3xl font-semibold tracking-tight text-ink md:text-4xl">
+            <div className="font-display text-3xl font-light tracking-tight text-[#FDF8F9] md:text-4xl">
                 {prefix}
-                {display}
+                <span className="text-gradient-ai font-normal">{display}</span>
                 {suffix}
             </div>
-            <div className="mt-1 text-xs font-medium uppercase tracking-wider text-umber">{label}</div>
+            <div className="mt-1 text-xs font-mono uppercase tracking-wider text-[#B89EA5]">{label}</div>
         </div>
     );
 };

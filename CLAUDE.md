@@ -2,7 +2,7 @@
 
 **Always read `LEARNINGS.md` at the start of every session before making changes.**
 
-This file is the operating manual for the Automate Labs marketing website. Read it fully before touching code. It encodes decisions that are already made — do not re-litigate them, just build to them.
+This file is the operating manual for the SmartVyapari marketing website. Read it fully before touching code. It encodes decisions that are already made — do not re-litigate them, just build to them.
 
 ---
 
@@ -12,86 +12,84 @@ The public marketing website for **SmartVyapari** (`smartvyapari.online`), an AI
 
 **Primary success metric:** qualified inbound leads (form submissions → notification in Atul's inbox → fast reply). Everything else (animations, copy, design) serves that.
 
-**Owner / contact email:** `atul.pandey0028@gmail.com` — this is where lead notifications go, and the identity behind auto-replies.
+**Business contact email:** `hello@smartvyapari.online` — all lead notifications, auto-replies, and public-facing email references use this address. **Never use the personal Gmail address.**
 
 ---
 
-## 2. Current status (2026-06-18)
+## 2. Current status (2026-09-26)
 
-- **Stack:** Vite 7 + React 19 + TypeScript + React Router v7, Tailwind CSS v3, Supabase JS.
-- **Structure:** one monolithic `src/components/AutomateLabsWebsite.tsx` (~48KB, all sections inline) + page routes in `src/pages/` (AboutUs, Careers, CaseStudies, Portfolio, PrivacyPolicy).
-- **Forms:** Contact, Audit-request, Callback. They insert rows into Supabase tables via `submitToSupabase()` in the main component.
-- **Email automation: DOES NOT EXIST YET.** `server/index.js` is an Express stub that only `console.log`s submissions and returns fake success. No email is sent anywhere. Building real email is a core task of this project.
-- **Design:** dark theme, purple/violet gradients (`--bg-base: #0a0118`), shimmer buttons, door-open intro animation.
+- **Stack:** Vite 7 + React 19 + TypeScript + React Router v6, Tailwind CSS v3, Supabase JS, Framer Motion.
+- **Structure:** `src/pages/Home.tsx` composing `src/components/sections/*` (Hero, About, Ecosystem, ViralMetrics, Contact) + page routes in `src/pages/` (CaseStudies, Portfolio, Learning, AboutUs, Careers, PrivacyPolicy).
+- **Forms:** Contact form in `ContactSection.tsx` + `components/forms/ContactForm.tsx`. Writes to Supabase `contacts` table **and** fires the `VITE_N8N_WEBHOOK_URL` webhook.
+- **Email automation:** n8n webhook architecture in place. Set `VITE_N8N_WEBHOOK_URL` in `.env` to go live. The n8n workflow (notify + auto-reply) should be built separately.
+- **Design:** Sakura Rose Luxury dark theme — Obsidian Black (`#050304`) base, Soft Sakura Pink (`#FFB7C5`) accents, Rose Gold (`#E6A0B0`) secondary, Warm Pearl (`#FDF8F9`) text. Full Cormorant Garamond + Plus Jakarta Sans typography stack.
+- **Hero video:** `public/assets/hero-3d-loop.mp4` — cherry blossom / sakura 3D looping scene.
+- **Deployment:** Vercel → `smartvyapari.vercel.app` + custom domain `smartvyapari.online`.
 
 ---
 
 ## 3. Decisions already made (do not deviate without asking)
 
-### 3.1 Redesign direction
-- **Premium redesign in Claude AI's brand aesthetic: warm cream + brown/clay.** Light theme (NOT the old dark purple). This is a deliberate brief from the owner — follow it exactly.
-- **Reference competitor: bizwitai.com.** We MIRROR its service lineup and content structure, but freshened (cleaner copy, no typos/dummy data, more credible) and in our own warm Claude identity. Never clone visually.
-- Goal: **maximize engagement and lead conversion** and look like a real, professional agency.
-- Conversion priorities, in order: clear single primary CTA above the fold → social proof / results → services → process → strong closing CTA. Mobile-first. Fast load. Real SEO meta tags + OpenGraph.
-- **Signature element:** a scroll-pinned "automation console" — services highlight one-by-one as the user scrolls, each with a live mini-UI mockup (the competitor's scroll section is the inspiration; ours is cleaner and on-brand).
+### 3.1 Design system — Sakura Rose Luxury (ACTIVE)
+- **Palette:** Deep Obsidian Black (`#050304`) background, Sakura Pink (`#FFB7C5`) primary accent, Rose Gold (`#E6A0B0`) secondary accent, Warm Pearl (`#FDF8F9`) primary text, Soft Rose Gray (`#E2C2C9` / `#B89EA5`) muted text.
+- **Glassmorphism borders:** `rgba(255, 183, 197, 0.15)`.
+- **Gradients:** `from-[#FFB7C5] via-[#E6A0B0] to-[#FDF8F9]`.
+- **Typography:** `font-display` / `font-serif` → Cormorant Garamond + Playfair Display (luxury serif, headings). `font-sans` / `font-body` → Plus Jakarta Sans + Outfit (body). `font-mono` → JetBrains Mono.
+- **Glow shadows:** all use `rgba(255, 183, 197, ...)` (sakura pink). No blue/cyan/purple shadows remain.
 
-### 3.1a Brand tokens (Claude aesthetic)
-- `--cream` #F0EEE6 (page bg) · `--paper` #FAF9F5 (cards) · `--clay` #D97757 (primary accent / Claude coral) · `--clay-deep` #BD5D3A (hover) · `--ink` #1F1E1B (text) · `--umber` #6B5D4F (muted text) · `--line` #E3DDD0 (hairlines).
-- Type: characterful warm **serif display** (e.g. Fraunces) used with restraint + clean **sans body** (e.g. Inter/Geist) + **mono** (Geist Mono/JetBrains Mono) for the automation/code mini-UIs.
-- Multiple tasteful animations (page-load sequence, scroll reveals, hover micro-interactions, the scroll-pinned services console). Respect `prefers-reduced-motion`.
+### 3.2 Brand identity
+- Wordmark: **Smart*Vyapari*** — "SmartVyapari" in Cormorant Garamond, italic on "Vyapari", large luxury editorial size (≥ 2rem).
+- No logo icon, no outer box around nav, no badge text next to brand name.
+- Hero headline: **"Helping businesses & creators scale faster."**
+- Hero sub-headline does NOT mention n8n or Supabase by name.
+- Navbar tab "Case Studies" → **"Don't know what to build?"** (routes to `/case-studies`).
 
-### 3.1b Services (mirror bizwitai, freshened)
-1. **Custom AI Automation Systems** — AI SDR, outreach engine, intelligent chatbots, internal ops automation, AI CRMs.
-2. **AI Voice & WhatsApp Agents** — 24/7 voice + WhatsApp agents, lead qualification, booking, follow-ups.
-3. **AI Filmmaking** — cinematic AI brand films, ads, UGC, founder avatars.
-4. **AI Agents** — sales/marketing agents that automate tasks, answer, support workflows.
-5. **AI Strategy & Consulting** — audit + roadmap: find what to automate.
+### 3.3 Navigation architecture
+- React Router v6 via `BrowserRouter` in `main.tsx`.
+- Routes: `/` (Home), `/case-studies`, `/portfolio`, `/learning`, `/about`, `/privacy`, `/careers`.
+- `ScrollToTop.tsx` mounted globally — handles scroll-to-top on route change **and** hash anchor scrolling with a 60 × 50ms polling loop (3s total) + 100ms grace period.
+- **Critical rule:** All hash anchors (`#ecosystem`, `#about`, `#contact`) must be written as full-path hrefs (`/#ecosystem`, `/#about`, `/#contact`) so they work from any page, not just the homepage. Bare `#hash` links only work on the page where the element exists.
 
-### 3.1c Learning page (NEW — competitor does NOT have this)
-- A dedicated **Learning Resources** page: a **curated tools & tutorials list** for people/students. Must be smooth, easily interpretable, easy to use. This is our differentiator.
-
-### 3.1d Marketing line (must appear prominently)
-> "We don't sell AI slop — we build end-to-end systems that save revenue."
-
-### 3.2 Email automation architecture
-- **Engine: n8n webhook → Gmail.** Forms POST to an n8n Cloud webhook (URL stored in env, never hardcoded). n8n owns all email logic so it stays editable without redeploying the site.
+### 3.4 Email automation architecture
+- **Engine: n8n webhook → Gmail.** Forms POST to an n8n Cloud webhook (URL in `.env` as `VITE_N8N_WEBHOOK_URL`, never hardcoded).
 - **Behavior on every form submit:**
-  1. **Notify Atul** at `atul.pandey0028@gmail.com` with the full lead details.
+  1. **Notify Atul** at `hello@smartvyapari.online` with full lead details.
   2. **Auto-reply to the lead** with a branded confirmation email.
-- **System of record:** keep writing submissions to Supabase too (do not remove the existing insert). Flow is: `form → Supabase insert (record) → n8n webhook (email)`. If the webhook fails, the lead is still saved.
-- The old `server/index.js` Express stub is **deprecated** — replace it; do not build new email logic inside it.
+- **System of record:** Supabase `contacts` table insert happens first (non-fatal if it fails), then the n8n webhook fires.
+- The old `server/index.js` Express stub is **deprecated and should not be used**.
 
-### 3.3 Deployment
-- **Vercel** is the deploy target (Atul's default). Use Vercel env vars for all secrets. The n8n webhook URL is an env var (`VITE_N8N_WEBHOOK_URL` or a server-side equivalent — prefer server-side / serverless route so the URL isn't shipped to the browser).
-
----
-
-## 4. Engineering rules (from Atul's global conventions)
-
-1. **Think before coding.** State assumptions explicitly. For ambiguous requests, surface 2–3 interpretations and ask rather than guess silently.
-2. **Simplicity first.** 100 lines over 1000. No premature abstractions. No over-engineering. Delete dead code.
-3. **Protect existing code.** Never touch code outside the requested scope. Never delete comments/code you don't understand. Show diffs of changed lines only. Flag if a task forces touching unrelated areas.
-4. **Goal-driven.** Define "done" as measurable criteria before starting; verify against them; then stop.
-5. **Communication:** give runnable commands, not theory. Flag blockers immediately — never work around silently. Automate first.
+### 3.5 Deployment
+- **Vercel** — `smartvyapari` project, branch `main` auto-deploys.
+- All secrets live in Vercel env vars. Never commit `.env` or any key/secret.
+- `VITE_SUPABASE_URL` and `VITE_SUPABASE_ANON_KEY` are publishable — safe for the browser. Never use service-role key on the client.
 
 ---
 
-## 5. Refactor target (when redesigning)
+## 4. Engineering rules
 
-The 48KB monolith must be broken into composable, readable pieces. Target structure:
+1. **Think before coding.** State assumptions explicitly. Surface 2–3 interpretations for ambiguous requests and ask rather than guess.
+2. **Simplicity first.** 100 lines over 1000. No premature abstractions. Delete dead code.
+3. **Protect existing code.** Never touch code outside the requested scope. Never delete unrelated comments/code. Show diffs of changed lines only.
+4. **Goal-driven.** Define "done" as measurable criteria before starting; verify; then stop.
+5. **Communication:** give runnable commands, not theory. Flag blockers immediately — never work around silently.
+
+---
+
+## 5. Project structure
 
 ```
 src/
   components/
-    layout/        Navbar, Footer, ScrollToTop
-    sections/      Hero, Services, Process, Results, Testimonials, CTA, FAQ
-    ui/            ShimmerButton, SectionHeading, Card, etc.
-    forms/         ContactForm, AuditForm, CallbackForm (+ shared submit hook)
-  pages/           route-level pages (existing)
+    layout/        Navbar.tsx, FooterSection.tsx, ScrollToTop.tsx
+    sections/      HeroSection, AboutSection, EcosystemSection, ViralMetricsSection, ContactSection
+    3d/            Canvas3DBackground.tsx, Card3DTilt.tsx
+    forms/         ContactForm.tsx
+    ui/            Stat.tsx, Icons.tsx, SectionHeading.tsx, Button.tsx, Reveal.tsx, etc.
+  pages/           Home, CaseStudies, Portfolio, Learning, AboutUs, Careers, PrivacyPolicy
   lib/             supabaseClient.ts, email.ts (n8n webhook client)
+public/
+  assets/          hero-3d-loop.mp4 (cherry blossom 3D video, 5.84 MB)
 ```
-
-Keep existing routes working. Do not break `react-router` paths used in nav/footer.
 
 ---
 
@@ -101,30 +99,47 @@ Keep existing routes working. Do not break `react-router` paths used in nav/foot
 |-----|-------|---------|
 | `VITE_SUPABASE_URL` | client | Supabase project URL |
 | `VITE_SUPABASE_ANON_KEY` | client | Supabase publishable key (safe to expose) |
-| `N8N_WEBHOOK_URL` (preferred server-side) | Vercel | n8n form webhook — keep off the client if possible |
+| `VITE_N8N_WEBHOOK_URL` | client/server | n8n form webhook — set to go live; empty = demo mode |
 
-- `.env` is gitignored. Never commit secrets. Never paste secret keys into chat or code comments.
-- The current Supabase key is a **publishable** key — safe for the browser. Do not swap in a service-role key on the client.
+- `.env` is gitignored. Never commit secrets. Copy values manually to Vercel env vars.
+- Do NOT chain `.select()` on anonymous Supabase inserts — causes RLS 42501 errors.
 
 ---
 
-## 7. Commands
+## 7. TypeScript constraints
+
+- `verbatimModuleSyntax` is enabled → type-only imports **must** use `import type { ... }`.
+- `TS6133` unused import = build error. Remove all unused imports before committing.
+- `lucide-react` does **not** have an Instagram icon → use the custom SVG in `src/components/ui/Icons.tsx`.
+- NavItem type: `{ label: string; to?: string; href?: string }` — use `to` for React Router `<Link>`, `href` for plain `<a>`.
+
+---
+
+## 8. Commands
 
 ```bash
-npm install        # deps
-npm run dev        # Vite dev server → http://localhost:5173
-npm run build      # tsc -b && vite build
-npm run lint       # eslint
-npm run preview    # preview production build
+npm install         # install deps
+npm run dev         # Vite dev server → http://localhost:5173
+npm run build       # tsc -b && vite build  (must pass 0 errors before pushing)
+npm run lint        # eslint
+npm run preview     # preview production build locally
+```
+
+```bash
+# Push to GitHub (run separately — never chain with &&)
+git add -A
+git commit -m "feat: <description>"
+git push origin main
 ```
 
 ---
 
-## 8. Definition of done for the redesign
+## 9. Definition of done
 
-- [ ] New design renders cleanly on mobile + desktop, fast (Lighthouse perf/SEO green).
-- [ ] All existing routes still work; no dead links.
+- [ ] Build passes: `npm run build` → 0 TypeScript errors, 0 Vite errors.
+- [ ] All routes work; no dead/broken links. Hash anchors use `/#section` format.
+- [ ] No personal email addresses (`@gmail.com`) in any source file — use `hello@smartvyapari.online`.
 - [ ] Every form: saves to Supabase **and** fires the n8n webhook.
-- [ ] n8n sends (a) lead notification to Atul, (b) branded auto-reply to the visitor.
 - [ ] No secrets in the repo. `.env` updated with any new vars + documented here.
-- [ ] `LEARNINGS.md` updated with any non-obvious gotcha discovered.
+- [ ] `LEARNINGS.md` updated with any non-obvious gotcha discovered this session.
+- [ ] Design matches the Sakura Rose Luxury palette — no blue/cyan/purple remnants.

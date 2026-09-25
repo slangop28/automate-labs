@@ -1,38 +1,80 @@
 # LEARNINGS.md — SmartVyapari Website
 
 Hard-won, project-specific gotchas. Add to this whenever a non-obvious lesson costs time once.
-Brand: **SmartVyapari** (`smartvyapari.online`).
+Brand: **SmartVyapari** (`smartvyapari.online`) · Contact: `hello@smartvyapari.online`
 
-## Known traps (2026-06-18)
+---
 
-- **The Express server (`server/index.js`) sends NO email.** It only `console.log`s submissions and returns a fake `{ success: true }` after a `setTimeout`. Do not assume email works because the form shows success — it never did. Real email is being built via n8n.
-- **Forms write to Supabase via `submitToSupabase(table, data)`** in `AutomateLabsWebsite.tsx`. The table names must already exist in Supabase or the insert silently logs an error and the function returns `false`. Verify table + column names before wiring a new form.
-- **The whole UI lives in one ~48KB component** (`AutomateLabsWebsite.tsx`). Search within it before assuming a section is missing; it's all inline.
-- **Supabase key in `.env` is the publishable (anon) key** — safe for the browser. Never replace it with a service-role key on the client side.
+## Phase 1 — Design system shipped (2026-06-18)
+
+- **Express server (`server/index.js`) sends NO email.** It only `console.log`s submissions and returns a fake `{ success: true }`. Do not assume email works because the form shows success — it never did. Real email is via n8n.
+- **Forms write to Supabase via `submitToSupabase()`**. Table names must already exist in Supabase or the insert silently logs an error and returns `false`. Verify table + column names before wiring a new form.
+- **Supabase key in `.env` is the publishable (anon) key** — safe for the browser. Never replace with a service-role key on the client.
 - **`.env` is gitignored** — copy values manually to Vercel env vars; they will not deploy automatically.
+- **Do NOT chain `.select()` on anonymous Supabase inserts** — triggers RLS error 42501.
 
-## Phase 1 — design system shipped (2026-06-18)
+---
 
-- **Design tokens** live in `tailwind.config.js` (colors `cream`/`paper`/`clay`/`ink`/`umber`/`line`, fonts `display`=Fraunces / `sans`=Inter / `mono`=JetBrains Mono, shadows `soft`/`lift`/`clay`) + base styles in `src/index.css`. Use `bg-cream text-ink text-clay font-display` etc. — the theme only **extends** Tailwind, so default colors (incl. the legacy purple) still work.
-- **Fonts** load via Google Fonts `<link>` in `index.html`. (Geist Mono isn't on Google Fonts → using JetBrains Mono instead.)
-- **Shared layout/UI kit:** `src/components/layout/{Navbar,Footer}.tsx` and `src/components/ui/{Container,Button,SectionHeading,Reveal,Stat,Icons}.tsx`. New pages should compose these.
-- **CaseStudies page rebuilt** — interactive accordion + industry filters + count-up stats + lead CTAs. **No more PPTX downloads.**
-- **PPTX files still exist on disk** at `public/case-studies/*.pptx` (~57 MB) but are no longer referenced. Safe to delete to slim the repo — awaiting owner confirmation.
-- **Still on the OLD dark purple design (not yet redesigned):** the homepage monolith `AutomateLabsWebsite.tsx`, plus `pages/Portfolio.tsx`, `AboutUs.tsx`, `Careers.tsx`, `PrivacyPolicy.tsx`. They render fine (each wraps its own dark bg) — redesign in later phases.
-- `SlideViewer.tsx` is unused/dead. Candidate for deletion.
+## Phase 2 — Full site redesigned, cream/clay theme (2026-06-19)
+
+- **Every page moved to the Claude (cream/clay) design.** Homepage rebuilt from 48 KB monolith into `pages/Home.tsx` composing `components/sections/*`. `AutomateLabsWebsite.tsx` **deleted**.
+- **Signature element** = `sections/AutomationConsole.tsx`: sticky console (desktop) driven by IntersectionObserver — mock swaps as user scrolls through 4 steps.
+- **Routing** (`main.tsx`): `/`→Home, `/case-studies`, `/learning`, `/portfolio`, `/about`, `/privacy`, `/careers`.
+- **Lead pipeline:** `lib/email.ts#submitLead` → Supabase insert into `contacts` table + POST to `VITE_N8N_WEBHOOK_URL`. Webhook URL empty in `.env` = DEMO MODE (logs to console, shows success). Set the var to go live.
+- **Scroll-reveal artifact:** `<Reveal>` starts at `opacity:0`, only animates via IntersectionObserver. Full-page screenshots show blank below-the-fold sections — NOT a bug. Use viewport screenshots.
 - TS gotcha: arrays of `{label, to?} | {label, href?}` link objects need an explicit `type` annotation with optional fields, or `tsc -b` errors on union member access.
 
-## Phase 2 — full site redesigned (2026-06-19)
+---
 
-- **Every page is now the Claude (cream/clay) design.** Homepage rebuilt from the 48 KB monolith into `pages/Home.tsx` composing `components/sections/*` (Hero, Metrics, Services, AutomationConsole, Process, Testimonials, ContactSection). `AutomateLabsWebsite.tsx` **deleted**.
-- Redesigned: `Home`, `CaseStudies`, `Learning` (new), `Portfolio`, `AboutUs`, `Careers`, `PrivacyPolicy`. All use shared `Navbar`/`Footer`.
-- **Signature element** = `sections/AutomationConsole.tsx`: a sticky console (desktop) whose mock swaps as you scroll through 4 steps, driven by IntersectionObserver. Mobile shows the mock inline per step.
-- **Routing** (`main.tsx`): `/`→Home, `/case-studies`, `/learning`, `/portfolio`, `/about`, `/privacy`, `/careers`. `ScrollToTop` now honours URL hashes (e.g. `/#contact`) — scrolls the target into view instead of forcing top.
-- **Lead pipeline:** `lib/email.ts#submitLead` → best-effort Supabase insert into a `contacts` table **+** POST to `VITE_N8N_WEBHOOK_URL`. **Webhook URL is currently EMPTY in `.env`** → form runs in DEMO MODE (logs to console, shows success). Set the var to go live. The n8n workflow itself (notify Atul + auto-reply) is NOT built yet.
-- `contacts` Supabase table may not exist — insert is wrapped in try/catch and is non-fatal. Old form tables were `audits`/`callbacks`/`newsletter`; the new single form uses `contacts`.
-- **Scroll-reveal artifact:** `<Reveal>` starts at `opacity:0` and only animates in via IntersectionObserver. A *full-page* screenshot shows below-the-fold sections blank because the observer never fired for off-screen nodes — this is NOT a bug; scroll (or viewport screenshots) shows them. Verify with viewport shots, not full-page.
-- Brand assets still placeholders: no real logo image (text wordmark used), no founder photo. Testimonials/metrics are the owner's existing real content, preserved.
+## Phase 3 — Sakura Rose Luxury design system (2026-09-25)
+
+### Design system pivot: cream/clay → Sakura Rose Luxury dark theme
+- **Complete elimination of all blue/cyan/purple** from the entire site. The old cream/clay theme is fully replaced.
+- **New palette:**
+  - Background: Obsidian Black `#050304`
+  - Primary text: Warm Pearl `#FDF8F9`
+  - Muted text: Soft Rose Gray `#B89EA5` / `#E2C2C9`
+  - Primary accent / glows: Sakura Pink `#FFB7C5`
+  - Secondary accent: Rose Gold `#E6A0B0`
+  - Glass border: `rgba(255, 183, 197, 0.15)`
+- **Typography:** Cormorant Garamond + Playfair Display (display/serif headings), Plus Jakarta Sans + Outfit (body), JetBrains Mono. Space Grotesk removed.
+- **CSS gradient utilities:** `text-gradient-ai` (`from-[#FFB7C5] via-[#E6A0B0] to-[#FDF8F9]`), `text-gradient-rose`.
+
+### Key files rewritten this session
+- `tailwind.config.js` — full rewrite: sakura/rose tokens, serif fontFamily, rose glow shadows, `petal-fall` animation keyframe.
+- `src/index.css` — full rewrite: rose CSS vars, sakura scrollbar, updated gradient utilities, serif h1/h2/h3.
+- `index.html` — Cormorant Garamond + Playfair Display added; Space Grotesk removed. Meta title/desc updated.
+- `src/pages/Home.tsx` — wrapper: `bg-[#050304]`, `text-[#FDF8F9]`, sakura selection.
+- `src/components/sections/HeroSection.tsx` — headline: "Helping businesses & creators scale faster.", n8n/Supabase removed from sub-headline, rose palette, floating status ticker removed (was overlapping buttons).
+- `src/components/layout/Navbar.tsx` — no outer box, no logo icon, no AUTONOMOUS AI badge, SmartVyapari as large luxury wordmark, "Case Studies" → "Don't know what to build?", rose hover underlines.
+- `src/components/layout/FooterSection.tsx` — rose palette, wordmark sans logo, "Don't know what to build?" link.
+- `src/components/sections/AboutSection.tsx`, `EcosystemSection.tsx`, `ViralMetricsSection.tsx`, `ContactSection.tsx` — all fully rewritten to sakura palette.
+- `src/components/3d/Canvas3DBackground.tsx` — particle colors → sakura palette.
+- `src/components/3d/Card3DTilt.tsx` — specular glare → pearl-rose rgba.
+- `src/pages/CaseStudies.tsx` — full rewrite: rose luxury, interactive accordion cards, new headline "Don't know what to build? Here's what's possible."
+- `src/components/ui/Stat.tsx` — rose palette colors.
+
+### Contact email migration (2026-09-26)
+- **`atul.pandey0028@gmail.com` → `hello@smartvyapari.online`** — replaced across all source files:
+  - `src/components/forms/ContactForm.tsx`
+  - `src/components/layout/FooterSection.tsx`
+  - `src/components/sections/ContactSection.tsx` (3 occurrences)
+  - `src/pages/Careers.tsx`
+  - `src/pages/PrivacyPolicy.tsx`
+- **Rule going forward:** Never use personal Gmail in source code. All public-facing and lead email references use `hello@smartvyapari.online`.
+
+### Navigation: cross-page hash anchor bug (2026-09-26)
+- **Root cause:** Bare `#hash` hrefs (e.g. `href="#ecosystem"`) only look for elements on the *current page*. When clicked from `/portfolio` or `/case-studies`, the `#ecosystem` section doesn't exist there, so nothing happens.
+- **Fix:** All hash anchors changed to full-path format: `href="/#ecosystem"`, `href="/#about"`, `href="/#contact"`. This forces the browser to navigate to `/` first, then `ScrollToTop.tsx` polls for the element.
+- **`ScrollToTop.tsx`** upgraded to 60 × 50ms polling loop (3 seconds total) with a 100ms initial grace period. Gives newly mounted sections time to appear in the DOM before the first probe.
+- **Files fixed:** `Navbar.tsx` (navItems + both CTA buttons), `FooterSection.tsx` (4 Systems column links).
+
+---
 
 ## Conventions
 
-- Read `CLAUDE.md` for project decisions (email = n8n webhook, fresh redesign, Vercel deploy).
+- Read `CLAUDE.md` for all project decisions (palette, email, navigation architecture, Vercel deploy).
+- Run `npm run build` before every commit. 0 TypeScript errors is non-negotiable.
+- NavItem links to same-page sections: always `href="/#sectionId"`, never bare `#sectionId`.
+- Use `import type` for type-only imports (`verbatimModuleSyntax` is on).
+- `lucide-react` has no Instagram icon → use `src/components/ui/Icons.tsx` custom SVG.

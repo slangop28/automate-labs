@@ -2,8 +2,9 @@ import { useEffect } from 'react';
 import { useLocation } from 'react-router-dom';
 
 /**
- * On route change: scroll to top, OR — if the URL has a hash like /#contact —
- * scroll that section into view (after the new page has painted).
+ * On route change: scroll to top, OR — if the URL has a hash like /#ecosystem or /#about —
+ * smoothly scroll that section into view.
+ * Polls up to 60 × 50ms (3 seconds) to give the target page time to mount.
  */
 const ScrollToTop = () => {
     const { pathname, hash } = useLocation();
@@ -11,17 +12,29 @@ const ScrollToTop = () => {
     useEffect(() => {
         if (hash) {
             const id = hash.replace('#', '');
-            // wait a frame so the target section exists in the DOM
-            requestAnimationFrame(() => {
+            let attempts = 0;
+            const maxAttempts = 60; // 3 seconds total
+
+            const tryScroll = () => {
                 const el = document.getElementById(id);
                 if (el) {
-                    el.scrollIntoView({ behavior: 'smooth', block: 'start' });
+                    setTimeout(() => {
+                        el.scrollIntoView({ behavior: 'smooth', block: 'start' });
+                    }, 80);
                     return;
                 }
-                window.scrollTo(0, 0);
-            });
+                if (attempts < maxAttempts) {
+                    attempts++;
+                    setTimeout(tryScroll, 50);
+                }
+                // If still not found after 3s, do nothing (stay at top of page)
+            };
+
+            // Small grace period lets the new page begin rendering before the first probe
+            setTimeout(tryScroll, 100);
             return;
         }
+
         window.scrollTo(0, 0);
     }, [pathname, hash]);
 

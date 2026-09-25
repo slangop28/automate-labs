@@ -1,73 +1,116 @@
-# React + TypeScript + Vite
+# SmartVyapari — Marketing Website
 
-This template provides a minimal setup to get React working in Vite with HMR and some ESLint rules.
+> **Helping businesses & creators scale faster.**
 
-Currently, two official plugins are available:
+The official marketing website for **SmartVyapari** (`smartvyapari.online`) — an AI automation agency that engineers self-healing AI agents, workflow automations, and high-converting 3D digital infrastructure for modern enterprises and ambitious creators.
 
-- [@vitejs/plugin-react](https://github.com/vitejs/vite-plugin-react/blob/main/packages/plugin-react) uses [Babel](https://babeljs.io/) (or [oxc](https://oxc.rs) when used in [rolldown-vite](https://vite.dev/guide/rolldown)) for Fast Refresh
-- [@vitejs/plugin-react-swc](https://github.com/vitejs/vite-plugin-react/blob/main/packages/plugin-react-swc) uses [SWC](https://swc.rs/) for Fast Refresh
+---
 
-## React Compiler
+## Tech Stack
 
-The React Compiler is not enabled on this template because of its impact on dev & build performances. To add it, see [this documentation](https://react.dev/learn/react-compiler/installation).
+| Layer | Technology |
+|-------|-----------|
+| Framework | React 19 + TypeScript |
+| Build | Vite 7 |
+| Routing | React Router v6 |
+| Styling | Tailwind CSS v3 + Framer Motion |
+| Database | Supabase (PostgreSQL) |
+| Email | n8n webhook → Gmail |
+| Deploy | Vercel → `smartvyapari.online` |
 
-## Expanding the ESLint configuration
+---
 
-If you are developing a production application, we recommend updating the configuration to enable type-aware lint rules:
+## Design System — Sakura Rose Luxury
 
-```js
-export default defineConfig([
-  globalIgnores(['dist']),
-  {
-    files: ['**/*.{ts,tsx}'],
-    extends: [
-      // Other configs...
+Dark luxury aesthetic inspired by a cherry blossom sakura aesthetic:
 
-      // Remove tseslint.configs.recommended and replace with this
-      tseslint.configs.recommendedTypeChecked,
-      // Alternatively, use this for stricter rules
-      tseslint.configs.strictTypeChecked,
-      // Optionally, add this for stylistic rules
-      tseslint.configs.stylisticTypeChecked,
+- **Background:** Deep Obsidian Black `#050304`
+- **Primary text:** Warm Pearl `#FDF8F9`
+- **Accent:** Soft Sakura Pink `#FFB7C5` · Rose Gold `#E6A0B0`
+- **Typography:** Cormorant Garamond + Playfair Display (headings) · Plus Jakarta Sans (body) · JetBrains Mono (code)
 
-      // Other configs...
-    ],
-    languageOptions: {
-      parserOptions: {
-        project: ['./tsconfig.node.json', './tsconfig.app.json'],
-        tsconfigRootDir: import.meta.dirname,
-      },
-      // other options...
-    },
-  },
-])
+---
+
+## Project Structure
+
+```
+src/
+├── components/
+│   ├── layout/       Navbar, FooterSection, ScrollToTop
+│   ├── sections/     HeroSection, AboutSection, EcosystemSection,
+│   │                 ViralMetricsSection, ContactSection
+│   ├── 3d/           Canvas3DBackground, Card3DTilt
+│   ├── forms/        ContactForm
+│   └── ui/           Stat, Icons, SectionHeading, Button, Reveal, etc.
+├── pages/            Home, CaseStudies, Portfolio, Learning,
+│                     AboutUs, Careers, PrivacyPolicy
+└── lib/              supabaseClient.ts, email.ts
+public/
+└── assets/           hero-3d-loop.mp4  (cherry blossom 3D hero video)
 ```
 
-You can also install [eslint-plugin-react-x](https://github.com/Rel1cx/eslint-react/tree/main/packages/plugins/eslint-plugin-react-x) and [eslint-plugin-react-dom](https://github.com/Rel1cx/eslint-react/tree/main/packages/plugins/eslint-plugin-react-dom) for React-specific lint rules:
+---
 
-```js
-// eslint.config.js
-import reactX from 'eslint-plugin-react-x'
-import reactDom from 'eslint-plugin-react-dom'
+## Getting Started
 
-export default defineConfig([
-  globalIgnores(['dist']),
-  {
-    files: ['**/*.{ts,tsx}'],
-    extends: [
-      // Other configs...
-      // Enable lint rules for React
-      reactX.configs['recommended-typescript'],
-      // Enable lint rules for React DOM
-      reactDom.configs.recommended,
-    ],
-    languageOptions: {
-      parserOptions: {
-        project: ['./tsconfig.node.json', './tsconfig.app.json'],
-        tsconfigRootDir: import.meta.dirname,
-      },
-      // other options...
-    },
-  },
-])
+```bash
+# Install dependencies
+npm install
+
+# Start dev server (http://localhost:5173)
+npm run dev
+
+# Production build (must pass 0 errors)
+npm run build
+
+# Preview production build locally
+npm run preview
 ```
+
+---
+
+## Environment Variables
+
+Create a `.env` file at the project root (gitignored — never commit):
+
+```env
+VITE_SUPABASE_URL=your_supabase_project_url
+VITE_SUPABASE_ANON_KEY=your_supabase_anon_key
+VITE_N8N_WEBHOOK_URL=your_n8n_webhook_url
+```
+
+> **Note:** `VITE_N8N_WEBHOOK_URL` left empty = demo mode (logs to console, shows success). Set it in Vercel env vars to go live.
+
+Copy these values manually to **Vercel → Settings → Environment Variables**. They will not deploy from `.env`.
+
+---
+
+## Pages & Routes
+
+| Route | Page | Description |
+|-------|------|-------------|
+| `/` | Home | Hero, About, Ecosystem, Metrics, Contact |
+| `/case-studies` | "Don't know what to build?" | Interactive case studies accordion |
+| `/portfolio` | Portfolio | Project showcase |
+| `/learning` | Learning Hub | Curated AI tools & tutorials |
+| `/about` | About Us | Team & mission |
+| `/careers` | Careers | Open roles |
+| `/privacy` | Privacy Policy | Legal |
+
+---
+
+## Contact
+
+- **Website:** [smartvyapari.online](https://smartvyapari.online)
+- **Email:** hello@smartvyapari.online
+- **GitHub:** [slangop28/automate-labs](https://github.com/slangop28/automate-labs)
+
+---
+
+## Notes for Contributors
+
+- All hash anchor links must use the full-path format `href="/#sectionId"` — bare `#sectionId` only works on the page where the element exists.
+- Run `npm run build` before every commit. 0 TypeScript errors is non-negotiable.
+- Use `import type` for type-only imports (`verbatimModuleSyntax` is enabled).
+- Never use personal email addresses in source files — use `hello@smartvyapari.online`.
+- See `CLAUDE.md` for full engineering conventions and `LEARNINGS.md` for hard-won gotchas.
