@@ -1,8 +1,11 @@
 import { useEffect } from 'react';
-import type { Organization, Service, FAQPage, WithContext, Thing } from 'schema-dts';
+
+// Using plain object type to avoid requiring the schema-dts package
+// eslint-disable-next-line @typescript-eslint/no-explicit-any
+type SchemaJson = Record<string, any>;
 
 interface SchemaOrgProps {
-    schema: WithContext<Thing> | WithContext<Thing>[];
+    schema: SchemaJson | SchemaJson[];
 }
 
 export const SchemaOrg = ({ schema }: SchemaOrgProps) => {
@@ -29,7 +32,7 @@ export const SchemaOrg = ({ schema }: SchemaOrgProps) => {
 
 // --- Standard Schemas for SmartVyapari ---
 
-export const organizationSchema: WithContext<Organization> = {
+export const organizationSchema: SchemaJson = {
     '@context': 'https://schema.org',
     '@type': 'Organization',
     '@id': 'https://smartvyapari.online/#organization',
@@ -71,7 +74,7 @@ export const organizationSchema: WithContext<Organization> = {
     ],
 };
 
-export const serviceSchemas: WithContext<Service>[] = [
+export const serviceSchemas: SchemaJson[] = [
     {
         '@context': 'https://schema.org',
         '@type': 'Service',
@@ -159,7 +162,7 @@ export const serviceSchemas: WithContext<Service>[] = [
     },
 ];
 
-export const faqSchema: WithContext<FAQPage> = {
+export const faqSchema: SchemaJson = {
     '@context': 'https://schema.org',
     '@type': 'FAQPage',
     '@id': 'https://smartvyapari.online/#faq',
