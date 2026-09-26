@@ -67,7 +67,10 @@ Brand: **SmartVyapari** (`smartvyapari.online`) · Contact: `hello@smartvyapari.
 - **Root cause:** Bare `#hash` hrefs (e.g. `href="#ecosystem"`) only look for elements on the *current page*. When clicked from `/portfolio` or `/case-studies`, the `#ecosystem` section doesn't exist there, so nothing happens.
 - **Fix:** All hash anchors changed to full-path format: `href="/#ecosystem"`, `href="/#about"`, `href="/#contact"`. This forces the browser to navigate to `/` first, then `ScrollToTop.tsx` polls for the element.
 - **`ScrollToTop.tsx`** upgraded to 60 × 50ms polling loop (3 seconds total) with a 100ms initial grace period. Gives newly mounted sections time to appear in the DOM before the first probe.
-- **Files fixed:** `Navbar.tsx` (navItems + both CTA buttons), `FooterSection.tsx` (4 Systems column links).
+### Mobile layout responsiveness (2026-09-26)
+- **`Card3DTilt` padding on mobile:** Use `p-5 sm:p-8 md:p-12` instead of static `p-8` or `p-12` to preserve internal container width on screens below 400px.
+- **Simulator card grid:** Multi-digit rupee formatted amounts (e.g. `₹2,43,200`) overflow on two-column narrow mobile viewports. Use `grid-cols-1 sm:grid-cols-2` with `tracking-tight` and `flex flex-col sm:flex-row` on full-width CTA rows to prevent text/button collisions.
+- **Mockup badges:** Avoid wide trailing status badges next to long filenames (e.g. `n8n_workflow_engine.ts`) inside constrained mobile mockup headers.
 
 ---
 
