@@ -109,7 +109,7 @@ export const EcosystemSection = () => {
               <button
                 key={item.id}
                 onClick={() => setActiveTab(item.id)}
-                className={`group flex items-center gap-2.5 rounded-full px-6 py-2.5 text-xs font-semibold uppercase tracking-wider transition-all duration-300 ${
+                className={`group flex items-center gap-2 rounded-full px-4 sm:px-6 py-2 sm:py-2.5 text-[11px] sm:text-xs font-semibold uppercase tracking-wider transition-all duration-300 ${
                   isActive
                     ? 'bg-gradient-to-r from-[#FFB7C5] via-[#E6A0B0] to-[#FDF8F9] text-[#050304] shadow-glow-sm'
                     : 'bg-[#0F0B0D]/60 text-[#B89EA5] hover:bg-[#FFB7C5]/08 hover:text-[#FDF8F9] border border-[#FFB7C5]/10'
@@ -132,7 +132,7 @@ export const EcosystemSection = () => {
               exit={{ opacity: 0, y: -20 }}
               transition={{ duration: 0.4, ease: [0.16, 1, 0.3, 1] }}
             >
-              <Card3DTilt intensity={8} className="border border-[#FFB7C5]/15 bg-[#0F0B0D]/85 p-8 md:p-12 shadow-2xl backdrop-blur-2xl">
+              <Card3DTilt intensity={8} className="border border-[#FFB7C5]/15 bg-[#0F0B0D]/85 p-5 sm:p-8 md:p-12 shadow-2xl backdrop-blur-2xl">
                 <div className="grid gap-10 lg:grid-cols-2 items-center">
                   {/* Left: Features */}
                   <div>
@@ -171,7 +171,7 @@ export const EcosystemSection = () => {
                   </div>
 
                   {/* Right: Mockup Container */}
-                  <div className="relative flex items-center justify-center rounded-2xl border border-[#FFB7C5]/12 bg-black/50 p-6 overflow-hidden min-h-[340px]">
+                  <div className="relative flex items-center justify-center rounded-2xl border border-[#FFB7C5]/12 bg-black/50 p-4 sm:p-6 overflow-hidden min-h-[280px] sm:min-h-[340px]">
                     {/* Rose ambient flare */}
                     <div className="pointer-events-none absolute h-52 w-52 rounded-full bg-[#FFB7C5]/12 blur-3xl" />
 
@@ -179,13 +179,12 @@ export const EcosystemSection = () => {
                       <div className="w-full max-w-sm space-y-3">
                         <div className="rounded-xl border border-[#FFB7C5]/15 bg-[#0F0B0D]/90 p-4 shadow-xl">
                           <div className="flex items-center justify-between pb-3 border-b border-[#FFB7C5]/10">
-                            <div className="flex items-center gap-2">
-                              <Cpu className="h-4 w-4 text-[#FFB7C5]" />
-                              <span className="text-xs font-mono font-semibold text-[#FDF8F9]">n8n_workflow_engine.ts</span>
+                            <div className="flex items-center gap-2 min-w-0">
+                              <Cpu className="h-4 w-4 text-[#FFB7C5] shrink-0" />
+                              <span className="text-xs font-mono font-semibold text-[#FDF8F9] truncate">n8n_workflow_engine.ts</span>
                             </div>
-                            <span className="text-[10px] font-mono text-[#FFB7C5] font-semibold bg-[#FFB7C5]/10 px-2 py-0.5 rounded-full">ACTIVE</span>
                           </div>
-                          <div className="mt-3 bg-black/70 p-3 rounded-lg border border-[#FFB7C5]/07 font-mono text-[11px] text-[#E2C2C9] space-y-1.5">
+                          <div className="mt-3 bg-black/70 p-3 rounded-lg border border-[#FFB7C5]/07 font-mono text-[11px] text-[#E2C2C9] space-y-1.5 overflow-x-auto">
                             <div className="text-[#B89EA5]">// Trigger on new transaction</div>
                             <div><span className="text-[#FFB7C5]">Step 1:</span> Parse incoming Webhook payload</div>
                             <div><span className="text-[#E6A0B0]">Step 2:</span> Verify stock in Supabase table</div>

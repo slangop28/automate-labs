@@ -141,7 +141,7 @@ export const ContactSection = () => {
             ) : (
               <form
                 onSubmit={handleSubmit}
-                className="space-y-5 rounded-3xl border border-[#FFB7C5]/15 bg-white/[0.03] p-8 backdrop-blur-sm"
+                className="space-y-5 rounded-3xl border border-[#FFB7C5]/15 bg-white/[0.03] p-5 sm:p-8 backdrop-blur-sm"
               >
                 {/* Name + Email row */}
                 <div className="grid gap-4 sm:grid-cols-2">

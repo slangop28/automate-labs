@@ -97,7 +97,7 @@ export const AboutSection = () => {
               viewport={{ once: true, margin: '-50px' }}
               transition={{ duration: 0.6, delay: i * 0.12 }}
             >
-              <Card3DTilt intensity={10} className="h-full p-8 border border-[#FFB7C5]/12 bg-[#0F0B0D]/70 hover:border-[#FFB7C5]/28 transition-all">
+              <Card3DTilt intensity={10} className="h-full p-5 sm:p-8 border border-[#FFB7C5]/12 bg-[#0F0B0D]/70 hover:border-[#FFB7C5]/28 transition-all">
                 {/* Gradient Accent Flare */}
                 <div className={`pointer-events-none absolute -top-20 -right-20 h-44 w-44 rounded-full ${pillar.glow} blur-2xl opacity-70`} />
 

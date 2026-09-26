@@ -98,21 +98,21 @@ export const ViralMetricsSection = () => {
 
         {/* Interactive ROI Simulator */}
         <div className="mt-16">
-          <Card3DTilt intensity={6} className="border border-[#FFB7C5]/15 bg-gradient-to-br from-[#0F0B0D]/95 to-[#0A0608]/95 p-8 md:p-10 backdrop-blur-2xl shadow-2xl">
+          <Card3DTilt intensity={6} className="border border-[#FFB7C5]/15 bg-gradient-to-br from-[#0F0B0D]/95 to-[#0A0608]/95 p-5 sm:p-8 md:p-10 backdrop-blur-2xl shadow-2xl">
             <div className="flex items-center gap-3 pb-6 border-b border-[#FFB7C5]/12">
-              <div className="flex h-10 w-10 items-center justify-center rounded-xl bg-[#FFB7C5]/10 text-[#FFB7C5] border border-[#FFB7C5]/20">
+              <div className="flex h-10 w-10 shrink-0 items-center justify-center rounded-xl bg-[#FFB7C5]/10 text-[#FFB7C5] border border-[#FFB7C5]/20">
                 <Calculator className="h-5 w-5" />
               </div>
               <div>
-                <h3 className="font-display text-xl font-bold text-[#FDF8F9]">Automation Impact & Pipeline Simulator</h3>
+                <h3 className="font-display text-lg sm:text-xl font-bold text-[#FDF8F9]">Automation Impact & Pipeline Simulator</h3>
                 <p className="text-xs text-[#B89EA5]">Calculate hours and operational overhead saved with automated AI architecture</p>
               </div>
             </div>
 
             <div className="mt-8 grid gap-8 lg:grid-cols-[1fr_1fr] items-center">
               <div>
-                <div className="flex justify-between items-center text-sm text-[#E2C2C9] mb-2">
-                  <span>Team Members / Staff on Repetitive Workflows:</span>
+                <div className="flex justify-between items-center text-xs sm:text-sm text-[#E2C2C9] mb-2">
+                  <span>Team Members on Repetitive Tasks:</span>
                   <span className="font-mono text-[#FFB7C5] font-bold">{teamSize} People</span>
                 </div>
                 <input
@@ -124,46 +124,46 @@ export const ViralMetricsSection = () => {
                   onChange={(e) => setTeamSize(Number(e.target.value))}
                   className="w-full h-2.5 bg-[#0F0B0D] rounded-lg appearance-none cursor-pointer accent-[#FFB7C5]"
                 />
-                <div className="flex justify-between text-[11px] text-[#B89EA5] font-mono mt-1">
-                  <span>2 (Small Team)</span>
-                  <span>25 (Growing Org)</span>
+                <div className="flex justify-between text-[10px] sm:text-[11px] text-[#B89EA5] font-mono mt-1">
+                  <span>2 (Small)</span>
+                  <span>25 (Growing)</span>
                   <span>60+ (Enterprise)</span>
                 </div>
 
                 <div className="mt-6 text-xs text-[#B89EA5] leading-relaxed bg-[#FFB7C5]/04 p-4 rounded-xl border border-[#FFB7C5]/10 space-y-2">
                   <div className="flex items-center gap-2 text-[#E2C2C9]">
-                    <CheckCircle2 className="h-4 w-4 text-[#FFB7C5]" />
+                    <CheckCircle2 className="h-4 w-4 shrink-0 text-[#FFB7C5]" />
                     <span>Average 38 hours recovered per employee monthly</span>
                   </div>
                   <div className="flex items-center gap-2 text-[#E2C2C9]">
-                    <CheckCircle2 className="h-4 w-4 text-[#FFB7C5]" />
+                    <CheckCircle2 className="h-4 w-4 shrink-0 text-[#FFB7C5]" />
                     <span>Zero manual human error in critical data pipelines</span>
                   </div>
                 </div>
               </div>
 
               {/* Simulation Output Cards */}
-              <div className="grid grid-cols-2 gap-4">
+              <div className="grid grid-cols-1 sm:grid-cols-2 gap-3 sm:gap-4">
                 <div className="rounded-xl border border-[#FFB7C5]/12 bg-black/50 p-4">
                   <div className="text-xs text-[#B89EA5]">Manual Hours Saved / Month</div>
-                  <div className="mt-1 font-display text-2xl font-bold text-[#FFB7C5]">~{manualHoursSavedPerMonth} hrs</div>
+                  <div className="mt-1 font-display text-xl sm:text-2xl font-bold text-[#FFB7C5]">~{manualHoursSavedPerMonth} hrs</div>
                   <div className="text-[10px] text-[#B89EA5] mt-1">Recovered for high-value tasks</div>
                 </div>
 
                 <div className="rounded-xl border border-[#FFB7C5]/12 bg-black/50 p-4">
                   <div className="text-xs text-[#B89EA5]">Monthly Cost Reduction</div>
-                  <div className="mt-1 font-display text-2xl font-bold text-[#E6A0B0] font-mono">₹{operationalCostReductionPerMonth}</div>
+                  <div className="mt-1 font-display text-xl sm:text-2xl font-bold text-[#E6A0B0] font-mono tracking-tight">₹{operationalCostReductionPerMonth}</div>
                   <div className="text-[10px] text-[#B89EA5] mt-1">Operational overhead saved</div>
                 </div>
 
-                <div className="col-span-2 rounded-xl border border-[#FFB7C5]/20 bg-[#FFB7C5]/06 p-4 flex items-center justify-between">
+                <div className="col-span-1 sm:col-span-2 rounded-xl border border-[#FFB7C5]/20 bg-[#FFB7C5]/06 p-4 sm:p-5 flex flex-col sm:flex-row sm:items-center justify-between gap-4">
                   <div>
                     <div className="text-xs text-[#FFB7C5]">Est. Annual Value Unlocked</div>
-                    <div className="font-display text-xl sm:text-2xl font-bold text-[#FDF8F9] font-mono">₹{annualValueUnlocked} / year</div>
+                    <div className="font-display text-xl sm:text-2xl font-bold text-[#FDF8F9] font-mono tracking-tight">₹{annualValueUnlocked} / year</div>
                   </div>
                   <a
                     href="#contact"
-                    className="rounded-full bg-gradient-to-r from-[#FFB7C5] to-[#E6A0B0] px-5 py-2 text-xs font-bold text-[#050304] hover:shadow-glow-sm transition-all hover:scale-105"
+                    className="w-full sm:w-auto text-center rounded-full bg-gradient-to-r from-[#FFB7C5] to-[#E6A0B0] px-6 py-2.5 text-xs font-bold text-[#050304] hover:shadow-glow-sm transition-all hover:scale-105 shrink-0"
                   >
                     Deploy AI Architecture
                   </a>
