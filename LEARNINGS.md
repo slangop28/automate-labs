@@ -70,7 +70,9 @@ Brand: **SmartVyapari** (`smartvyapari.online`) · Contact: `hello@smartvyapari.
 ### Mobile layout responsiveness (2026-09-26)
 - **`Card3DTilt` padding on mobile:** Use `p-5 sm:p-8 md:p-12` instead of static `p-8` or `p-12` to preserve internal container width on screens below 400px.
 - **Simulator card grid:** Multi-digit rupee formatted amounts (e.g. `₹2,43,200`) overflow on two-column narrow mobile viewports. Use `grid-cols-1 sm:grid-cols-2` with `tracking-tight` and `flex flex-col sm:flex-row` on full-width CTA rows to prevent text/button collisions.
-- **Mockup badges:** Avoid wide trailing status badges next to long filenames (e.g. `n8n_workflow_engine.ts`) inside constrained mobile mockup headers.
+### Google Search Console & Keyword-Rich About Us Redesign (2026-09-27)
+- **Google Search Console Verification:** Static verification HTML file `google6343d5fc6820c473.html` placed in `public/` directory so it is directly served at root `smartvyapari.online/google6343d5fc6820c473.html`.
+- **About Us page (`/about`):** Full redesign in Sakura Rose Luxury aesthetic with keyword matrix covering WhatsApp AI agents, Voice calling systems, n8n workflow engines, RAG knowledge bots, E-commerce retention agents, and generative video infrastructure.
 
 ---
 
